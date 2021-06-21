@@ -7,37 +7,44 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = DarkColors.primaryColor,
+    primaryVariant = DarkColors.primaryColor,
+    secondary = DarkColors.primaryColor,
+    secondaryVariant = DarkColors.primaryColor,
+    surface = DarkColors.backgroundElevated,
+    onBackground = DarkColors.background,
+    onSurface = DarkColors.textPrimary,
+    background = DarkColors.background,
+    onPrimary = DarkColors.background,
+    onSecondary = DarkColors.background,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    primary = LightColors.primaryColor,
+    primaryVariant = LightColors.primaryColor,
+    secondary = LightColors.primaryColor,
+    secondaryVariant = LightColors.primaryColor,
+    surface = LightColors.backgroundSecondary,
+    onBackground = LightColors.background,
+    onSurface = LightColors.textPrimary,
+    background = LightColors.background,
+    onPrimary = LightColors.background,
+    onSecondary = LightColors.background,
 )
 
 @Composable
-fun GidgetTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
+fun GidgetTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
         LightColorPalette
     }
 
+    val colorType = if (darkTheme) DarkColors else LightColors
+
     MaterialTheme(
         colors = colors,
-        typography = Typography,
+        typography = buildTypography(colorType),
         shapes = Shapes,
         content = content
     )

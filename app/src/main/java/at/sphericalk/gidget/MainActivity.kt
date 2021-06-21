@@ -5,19 +5,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.sphericalk.gidget.ui.routes.Feed
 import at.sphericalk.gidget.ui.routes.Welcome
 import at.sphericalk.gidget.ui.theme.GidgetTheme
+import com.google.accompanist.insets.ProvideWindowInsets
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            GidgetTheme {
-               Home()
+            ProvideWindowInsets {
+                GidgetTheme {
+                    Home()
+                }
             }
         }
     }

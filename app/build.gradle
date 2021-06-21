@@ -55,4 +55,7 @@ dependencies {
 
     // navigation
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha03"
+
+    // accompanist
+    implementation "com.google.accompanist:accompanist-insets:0.12.0"
 }

@@ -1,5 +1,6 @@
 package at.sphericalk.gidget.di
 
+import at.sphericalk.gidget.data.network.GithubService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +20,9 @@ object ApiModule {
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+
+
+    @Provides
+    @Singleton
+    fun providesGithubService(retrofit: Retrofit) = retrofit.create(GithubService::class.java)
 }

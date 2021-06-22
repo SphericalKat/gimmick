@@ -1,4 +1,7 @@
 package at.sphericalk.gidget
 
-class GidgetApplicaiton {
-}
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class GidgetApplication : Application()

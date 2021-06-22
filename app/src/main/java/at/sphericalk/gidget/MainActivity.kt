@@ -19,10 +19,12 @@ import at.sphericalk.gidget.ui.routes.Welcome
 import at.sphericalk.gidget.ui.theme.GidgetTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 val LocalActivity = compositionLocalOf<Activity> { error("No context found!") }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

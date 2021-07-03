@@ -228,24 +228,22 @@ enum class EventType {
     SponsorshipEvent,
     WatchEvent;
 
-    override fun toString(): String {
-        return when (this) {
-            CreateEvent -> "created"
-            ForkEvent -> "forked"
-            PushEvent -> "pushed to"
-            ReleaseEvent -> "created a release for"
-            WatchEvent -> "starred"
-            PublicEvent -> "publicly released"
-            SponsorshipEvent -> "sponsored"
-            CommitCommentEvent -> "commented on a commit in"
-            DeleteEvent -> "deleted"
-            GollumEvent -> "created a wiki page for"
-            IssueCommentEvent -> "commented on an issue in"
-            IssuesEvent -> "created an issue for"
-            MemberEvent -> "became a member of"
-            PullRequestEvent -> "create a pull request in"
-            PullRequestReviewEvent -> "reviewed a pull request in"
-            PullRequestReviewCommentEvent -> "commented on a pull request review in"
-        }
+    override fun toString() = when (this) {
+        CreateEvent -> "created"
+        ForkEvent -> "forked"
+        PushEvent -> "pushed to"
+        ReleaseEvent -> "created a release for"
+        WatchEvent -> "starred"
+        PublicEvent -> "publicly released"
+        SponsorshipEvent -> "sponsored"
+        CommitCommentEvent -> "commented on a commit in"
+        DeleteEvent -> "deleted"
+        GollumEvent -> "created a wiki page for"
+        IssueCommentEvent -> "commented on an issue in"
+        IssuesEvent -> "created an issue for"
+        MemberEvent -> "became a member of"
+        PullRequestEvent -> "create a pull request in"
+        PullRequestReviewEvent -> "reviewed a pull request in"
+        PullRequestReviewCommentEvent -> "commented on a pull request review in"
     }
 }

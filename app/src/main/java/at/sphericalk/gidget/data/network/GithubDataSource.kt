@@ -2,14 +2,17 @@ package at.sphericalk.gidget.data.network
 
 import at.sphericalk.gidget.BuildConfig
 import at.sphericalk.gidget.model.ApiResult
+import at.sphericalk.gidget.model.RepoExtra
+import at.sphericalk.gidget.utils.destructure
 import retrofit2.Response
 import javax.inject.Inject
 
 class GithubDataSource @Inject constructor(private val service: GithubService) {
     suspend fun getReceivedEvents(token: String, username: String) =
-        service.getReceivedEvents(token = token, username = username)
+        service.getReceivedEvents(token = "token $token", username = username)
 
-    suspend fun getRepo(token: String, name: String) = service.getRepo(token = token, name = name)
+    suspend fun getRepo(token: String, owner: String, name: String) =
+        service.getRepo(token = "token $token", owner = owner, name = name)
 
     private suspend fun <T> getResult(request: suspend () -> Response<T>): ApiResult<T> {
         try {

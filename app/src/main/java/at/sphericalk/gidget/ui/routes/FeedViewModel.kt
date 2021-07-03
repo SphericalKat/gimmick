@@ -11,10 +11,9 @@ import at.sphericalk.gidget.repo.GithubRepository
 import at.sphericalk.gidget.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,9 +40,36 @@ class FeedViewModel @Inject constructor(
                                 "Error while fetching events:",
                                 exception
                             )
-                        }.collect {
-                            events.clear()
-                            events.addAll(it)
+                        }.collect { eventList ->
+                            eventList.asFlow()
+                                .flatMapMerge {
+                                    flow {
+                                        try {
+                                            val extras =
+                                                repository.getRepo(data.first, it.repo.name)
+                                            it.repoExtra = extras
+                                        } catch (e: Exception) {
+                                            Log.e(
+                                                "VIEWMODEL",
+                                                "Error while fetching events:",
+                                                e
+                                            )
+                                        }
+                                        emit(it)
+                                    }
+                                }
+                                .onCompletion { exception ->
+                                    if (exception != null) {
+                                        Log.e(
+                                            "VIEWMODEL",
+                                            "Error while fetching events:",
+                                            exception
+                                        )
+                                    }
+                                }
+                                .collect {
+                                    events.add(it)
+                                }
                         }
                 }
             }

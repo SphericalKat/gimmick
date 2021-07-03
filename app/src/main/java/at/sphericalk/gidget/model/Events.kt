@@ -8,14 +8,18 @@ data class Event(
     val type: EventType,
     val actor: Actor,
     val repo: Repo,
-    val repoExtra: RepoExtra,
+    var repoExtra: RepoExtra = RepoExtra(),
     val payload: Payload,
     val public: Boolean,
     val created_at: String,
     val org: Actor? = null
 )
 
-data class RepoExtra(val html_url: String, val description: String, val language: String)
+data class RepoExtra(
+    val html_url: String? = null,
+    val description: String? = null,
+    val language: String? = null
+)
 
 val languages = Gson().fromJson(Constants.LANGUAGES, Map::class.java)
 

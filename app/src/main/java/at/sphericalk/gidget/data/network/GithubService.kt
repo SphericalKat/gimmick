@@ -17,10 +17,11 @@ interface GithubService {
         @Query("per_page") perPage: Int = 60
     ): List<Event>
 
-    @GET("/repos/{name}")
+    @GET("/repos/{owner}/{name}")
     suspend fun getRepo(
         @Header("accept") accept: String = "application/vnd.github.v3+json",
         @Header("Authorization") token: String,
+        @Path("owner") owner: String,
         @Path("name") name: String,
     ): RepoExtra
 }

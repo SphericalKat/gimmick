@@ -17,4 +17,15 @@ class GithubRepository @Inject constructor(private val dataSource: GithubDataSou
         val (owner, name) = repo.split("/").destructure()
         return dataSource.getRepo(token, owner, name)
     }
+
+    suspend fun getAccessToken(
+        clientId: String,
+        clientSecret: String,
+        code: String,
+        redirectUrl: String
+    ) = flow {
+        emit(dataSource.getAccessToken(clientId, clientSecret, code, redirectUrl))
+    }
+
+    suspend fun getUser(token: String) = dataSource.getUser("token $token")
 }

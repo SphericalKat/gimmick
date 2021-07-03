@@ -1,8 +1,12 @@
 package at.sphericalk.gidget.utils
 
 import androidx.datastore.preferences.core.stringPreferencesKey
+import at.sphericalk.gidget.BuildConfig
 
 object Constants {
+    const val REDIRECT_URI = "gimmick://auth"
+    val OAUTH_URL =
+        "https://github.com/login/oauth/authorize?client_id=${BuildConfig.CLIENT_ID}&scope=user:email&redirect_uri=$REDIRECT_URI"
     val API_KEY = stringPreferencesKey("API_KEY")
     val USERNAME = stringPreferencesKey("USERNAME")
     const val LANGUAGES =

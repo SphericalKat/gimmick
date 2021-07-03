@@ -6,6 +6,10 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+def secretPropertiesFile = rootProject.file("secrets.properties")
+def secretProperties = new Properties()
+secretProperties.load(new FileInputStream(secretPropertiesFile))
+
 android {
     compileSdk 30
     buildToolsVersion "30.0.3"
@@ -16,6 +20,9 @@ android {
         targetSdk 30
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "CLIENT_ID", secretProperties["CLIENT_ID"]
+        buildConfigField "String", "CLIENT_SECRET", secretProperties["CLIENT_SECRET"]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -58,8 +65,11 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.0-rc01'
+
+    // lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
 
     // browser
     implementation "androidx.browser:browser:1.3.0"

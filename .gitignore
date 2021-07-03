@@ -13,5 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+secrets.properties
+.envrc
 app/google-services.json
 app/release

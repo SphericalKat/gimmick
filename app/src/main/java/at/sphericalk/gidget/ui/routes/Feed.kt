@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,8 +24,10 @@ import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.R
+import at.sphericalk.gidget.model.Event
 import at.sphericalk.gidget.model.languages
 import at.sphericalk.gidget.utils.Constants
+import at.sphericalk.gidget.utils.timeAgo
 import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
@@ -33,6 +36,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
@@ -65,7 +70,12 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
         )
     }) {
         LazyColumn(Modifier.padding(horizontal = 24.dp)) {
-            items(viewModel.events) { event ->
+            items(viewModel.events.sortedByDescending {
+                LocalDateTime.parse(
+                    it.created_at,
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                )
+            }) { event ->
                 Row(
                     modifier = Modifier
                         .padding(vertical = 24.dp)
@@ -126,7 +136,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                         .fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "3 hours ago", fontSize = 12.sp)
+                    Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
 
 
                     event.repoExtra?.language?.let {

@@ -2,8 +2,6 @@ package at.sphericalk.gidget.data.network
 
 import at.sphericalk.gidget.BuildConfig
 import at.sphericalk.gidget.model.ApiResult
-import at.sphericalk.gidget.model.RepoExtra
-import at.sphericalk.gidget.utils.destructure
 import retrofit2.Response
 import javax.inject.Inject
 

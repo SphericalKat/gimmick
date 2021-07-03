@@ -4,7 +4,6 @@ import android.text.format.DateUtils
 import android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE
 import android.util.Log
 import androidx.compose.ui.graphics.Color
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 

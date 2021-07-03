@@ -6,13 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -22,9 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
-import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.R
-import at.sphericalk.gidget.model.Event
+import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.model.languages
 import at.sphericalk.gidget.utils.Constants
 import at.sphericalk.gidget.utils.timeAgo
@@ -121,7 +117,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                 append(event.repo.name)
                             }
                         })
-                        event.repoExtra?.description?.let {
+                        event.repoExtra.description?.let {
                             Text(
                                 text = it,
                                 fontSize = 14.sp,
@@ -139,7 +135,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                     Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
 
 
-                    event.repoExtra?.language?.let {
+                    event.repoExtra.language?.let {
                         val color = languages[it]?.toColor() ?: Color.Transparent
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Canvas(modifier = Modifier.size(12.dp), onDraw = {

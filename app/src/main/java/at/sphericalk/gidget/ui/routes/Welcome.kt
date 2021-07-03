@@ -3,19 +3,14 @@ package at.sphericalk.gidget.ui.routes
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavController
@@ -29,35 +24,6 @@ import com.google.firebase.auth.OAuthProvider
 import kotlinx.coroutines.runBlocking
 
 private lateinit var auth: FirebaseAuth
-
-class PrefixTransformation(val prefix: String, val color: Color) : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        return prefixFilter(text, prefix, color)
-    }
-}
-
-fun prefixFilter(text: AnnotatedString, prefix: String, color: Color): TransformedText {
-    val prefixOffset = prefix.length
-    val out = with(AnnotatedString.Builder()) {
-        append(prefix)
-        append(text)
-        addStyle(SpanStyle(color = color), 0, 1)
-        toAnnotatedString()
-    }
-
-    val numberOffsetTranslator = object : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int {
-            return offset + prefixOffset
-        }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            if (offset <= prefixOffset - 1) return prefixOffset
-            return offset - prefixOffset
-        }
-    }
-
-    return TransformedText(out, numberOffsetTranslator)
-}
 
 @Composable
 fun Welcome(navController: NavController) {
@@ -84,6 +50,7 @@ fun Welcome(navController: NavController) {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         ) {
             val activity = LocalActivity.current

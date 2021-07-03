@@ -16,17 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.R
-import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.firebase.auth.FirebaseAuth
 
-private lateinit var auth: FirebaseAuth
 
 @Composable
 fun Welcome(navController: NavController) {
-    auth = FirebaseAuth.getInstance()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,7 +64,10 @@ fun Welcome(navController: NavController) {
                         navController.navigate("feed")
                     }
                 }) {
-                    Icon(painter = painterResource(id = R.drawable.github_icon), contentDescription = null)
+                    Icon(
+                        painter = painterResource(id = R.drawable.github_icon),
+                        contentDescription = null
+                    )
                     Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                     Text(text = "Sign in ", color = Color.Black)
                 }

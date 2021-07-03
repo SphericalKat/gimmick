@@ -1,5 +1,8 @@
 package at.sphericalk.gidget.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class GithubUser(
     val login: String,
     val id: Int,

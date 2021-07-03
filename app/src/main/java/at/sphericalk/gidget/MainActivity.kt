@@ -73,7 +73,9 @@ class MainActivity : ComponentActivity() {
                         }
                         Log.d("TOKEN", it.toString())
                     }
-                    navController.navigate("feed")
+                    navController.navigate("feed") {
+                        popUpTo("welcome") { inclusive = true }
+                    }
                 }
             }
         }
@@ -82,16 +84,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(viewModel: FeedViewModel, navController: NavHostController) {
-//    navController = rememberNavController()
     val dataStore = LocalActivity.current.dataStore
-//    val scope = rememberCoroutineScope()
-//    var startDestination by remember {
-//        mutableStateOf("welcome")
-//    }
-//
-//    dataStore.data.map { it[Constants.API_KEY] }
-//        .onEach { it?.let { navController.navigate("feed") } }
-//        .launchIn(scope)
 
     val token = runBlocking { dataStore.data.map { it[Constants.API_KEY] }.first() }
     Log.d("TOKEN", token.toString())

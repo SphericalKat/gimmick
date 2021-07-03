@@ -1,5 +1,6 @@
 package at.sphericalk.gidget.ui.routes
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.dataStore
+import at.sphericalk.gidget.R
 import at.sphericalk.gidget.utils.Constants
+import coil.transform.CircleCropTransformation
+import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.first
@@ -54,7 +58,21 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
     }) {
         LazyColumn(Modifier.padding(horizontal = 16.dp)) {
             items(viewModel.events) { event ->
-                Text(text = "${event.actor.login} ${event.type} ${event.repo.name}")
+                Row {
+                    Image(
+                        painter = rememberCoilPainter(
+                            request = event.actor.avatar_url,
+                            requestBuilder = {
+                                transformations(CircleCropTransformation())
+                            },
+                            previewPlaceholder = R.drawable.ic_launcher_background,
+                            fadeIn = true
+                        ),
+                        contentDescription = event.actor.login,
+                        modifier = Modifier.size(32.dp, 32.dp),
+                    )
+                    Text(text = "${event.actor.login} ${event.type} ${event.repo.name}")
+                }
             }
         }
     }

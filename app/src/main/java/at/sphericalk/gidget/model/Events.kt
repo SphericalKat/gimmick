@@ -7,17 +7,17 @@ data class Event(
     val repo: Repo,
     val payload: Payload,
     val public: Boolean,
-    val createdAt: String,
+    val created_at: String,
     val org: Actor? = null
 )
 
 data class Actor(
     val id: Long,
     val login: String,
-    val displayLogin: String? = null,
-    val gravatarID: String,
+    val display_login: String? = null,
+    val gravatar_id: String,
     val url: String,
-    val avatarURL: String
+    val avatar_url: String
 )
 
 data class Payload(

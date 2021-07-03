@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.NavHost
@@ -30,6 +29,7 @@ val LocalActivity = compositionLocalOf<Activity> { error("No context found!") }
 class MainActivity : ComponentActivity() {
 
     private val viewModel: FeedViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

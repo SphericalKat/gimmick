@@ -9,6 +9,8 @@ class GithubDataSource @Inject constructor(private val service: GithubService) {
     suspend fun getReceivedEvents(token: String, username: String) =
         service.getReceivedEvents(token = token, username = username)
 
+    suspend fun getRepo(token: String, name: String) = service.getRepo(token = token, name = name)
+
     private suspend fun <T> getResult(request: suspend () -> Response<T>): ApiResult<T> {
         try {
             val response = request()

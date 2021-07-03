@@ -1,15 +1,23 @@
 package at.sphericalk.gidget.model
 
+import at.sphericalk.gidget.utils.Constants
+import com.google.gson.Gson
+
 data class Event(
     val id: String,
     val type: EventType,
     val actor: Actor,
     val repo: Repo,
+    val repoExtra: RepoExtra,
     val payload: Payload,
     val public: Boolean,
     val created_at: String,
     val org: Actor? = null
 )
+
+data class RepoExtra(val html_url: String, val description: String, val language: String)
+
+val languages = Gson().fromJson(Constants.LANGUAGES, Map::class.java)
 
 data class Actor(
     val id: Long,

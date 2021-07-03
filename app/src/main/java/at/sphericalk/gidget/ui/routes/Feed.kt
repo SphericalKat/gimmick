@@ -12,6 +12,10 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
@@ -56,9 +60,12 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
             },
         )
     }) {
-        LazyColumn(Modifier.padding(horizontal = 16.dp)) {
+        LazyColumn(Modifier.padding(horizontal = 24.dp)) {
             items(viewModel.events) { event ->
-                Row {
+                Row(
+                    modifier = Modifier.padding(vertical = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Image(
                         painter = rememberCoilPainter(
                             request = event.actor.avatar_url,
@@ -71,7 +78,19 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                         contentDescription = event.actor.login,
                         modifier = Modifier.size(32.dp, 32.dp),
                     )
-                    Text(text = "${event.actor.login} ${event.type} ${event.repo.name}")
+                    Text(
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(event.actor.login)
+                            }
+                            append(" ")
+                            append(event.type.toString())
+                            append(" ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append(event.repo.name)
+                            }
+                        },
+                    )
                 }
             }
         }

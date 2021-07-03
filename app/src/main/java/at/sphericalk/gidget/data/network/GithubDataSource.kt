@@ -6,9 +6,8 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class GithubDataSource @Inject constructor(private val service: GithubService) {
-    suspend fun getReceivedEvents(token: String, username: String) = getResult {
+    suspend fun getReceivedEvents(token: String, username: String) =
         service.getReceivedEvents(token = token, username = username)
-    }
 
     private suspend fun <T> getResult(request: suspend () -> Response<T>): ApiResult<T> {
         try {

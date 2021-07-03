@@ -24,5 +24,5 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun providesGithubService(retrofit: Retrofit) = retrofit.create(GithubService::class.java)
+    fun providesGithubService(retrofit: Retrofit): GithubService = retrofit.create(GithubService::class.java)
 }

@@ -76,7 +76,7 @@ fun Welcome(navController: NavController) {
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(text = "Gidget")
+                        Text(text = "Gimmick")
                     }
                 },
             )
@@ -120,6 +120,7 @@ fun handleLogin(
                 runBlocking {
                     activity.dataStore.edit { prefs ->
                         prefs[Constants.API_KEY] = credential.accessToken!!
+                        prefs[Constants.USERNAME] = it.additionalUserInfo?.username!!
                     }
                 }
                 onLoggedIn()

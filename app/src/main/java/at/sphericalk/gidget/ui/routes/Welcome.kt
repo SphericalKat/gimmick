@@ -4,17 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
+import at.sphericalk.gidget.R
+import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.firebase.auth.FirebaseAuth
@@ -44,19 +46,33 @@ fun Welcome(navController: NavController) {
             )
         },
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            val activity = LocalActivity.current
-            Text(text = "Welcome to Gidget")
-            Button(onClick = {
-                handleLogin(activity) {
-                    navController.navigate("feed")
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(30.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+
+            ) {
+                val activity = LocalActivity.current
+                Text(
+                    text = "Welcome to Gimmick,\n your new and improved GitHub feed",
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h6
+                )
+                Button(onClick = {
+                    handleLogin(activity) {
+                        navController.navigate("feed")
+                    }
+                }) {
+                    Icon(painter = painterResource(id = R.drawable.github_icon), contentDescription = null)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = "Sign in ", color = Color.Black)
                 }
-            }) {
-                Text(text = "Login")
             }
         }
     }

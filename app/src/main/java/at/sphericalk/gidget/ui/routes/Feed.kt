@@ -14,6 +14,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.dataStore
@@ -94,12 +95,19 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                     )
                 }
                 Card() {
-                    Column(modifier = Modifier.padding(24.dp).fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .padding(24.dp)
+                            .fillMaxWidth()
+                    ) {
                         Text(buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                 append(event.repo.name)
                             }
                         })
+                        event.repoExtra?.description?.let {
+                            Text(text = it, fontSize = 14.sp, modifier = Modifier.padding(top = 8.dp))
+                        }
                     }
                 }
             }

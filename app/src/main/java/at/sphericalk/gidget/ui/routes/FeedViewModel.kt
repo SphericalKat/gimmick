@@ -19,59 +19,63 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     private val app: Application,
-    val repository: GithubRepository
+    private val repository: GithubRepository
 ) :
     AndroidViewModel(app) {
 
-
+    // list of events, exposed as state
     var events = mutableStateListOf<Event>()
         private set
 
     fun fetchEvents() {
-        viewModelScope.launch {
+        // clear events
+        events.clear()
+
+        // launch coroutine
+        viewModelScope.launch(Dispatchers.IO) {
+            // retrieve token and username
             app.dataStore.data.map {
                 Pair(it[Constants.API_KEY] ?: "", it[Constants.USERNAME] ?: "")
             }.collect { data ->
-                viewModelScope.launch(Dispatchers.IO) {
-                    repository.getReceivedEvents(data.first, data.second)
-                        .catch { exception ->
-                            Log.e(
-                                "VIEWMODEL",
-                                "Error while fetching events:",
-                                exception
-                            )
-                        }.collect { eventList ->
-                            eventList.asFlow()
-                                .flatMapMerge {
-                                    flow {
-                                        try {
-                                            val extras =
-                                                repository.getRepo(data.first, it.repo.name)
-                                            it.repoExtra = extras
-                                        } catch (e: Exception) {
-                                            Log.e(
-                                                "VIEWMODEL",
-                                                "Error while fetching events:",
-                                                e
-                                            )
-                                        }
-                                        emit(it)
-                                    }
-                                }
-                                .onCompletion { exception ->
-                                    if (exception != null) {
+                // fetch events from API
+                repository.getReceivedEvents(data.first, data.second)
+                    .catch { exception -> // catch any nasty exceptions
+                        Log.e(
+                            "VIEWMODEL",
+                            "Error while fetching events:",
+                            exception
+                        )
+                    }.collect { eventList -> // collect list of events
+                        eventList.asFlow() // convert to flow, we want to fetch repos too
+                            .flatMapMerge { // use flatmapmerge to fetch repo per event
+                                flow {
+                                    try { // try getting repo
+                                        val extras =
+                                            repository.getRepo(data.first, it.repo.name)
+                                        it.repoExtra = extras
+                                    } catch (e: Exception) { // catch nasty exceptions
                                         Log.e(
                                             "VIEWMODEL",
                                             "Error while fetching events:",
-                                            exception
+                                            e
                                         )
                                     }
+                                    emit(it) // emit event
                                 }
-                                .collect {
-                                    events.add(it)
+                            }
+                            .onCompletion { exception -> // moar exception handling
+                                if (exception != null) {
+                                    Log.e(
+                                        "VIEWMODEL",
+                                        "Error while fetching events:",
+                                        exception
+                                    )
                                 }
-                        }
-                }
+                            }
+                            .collect {
+                                events.add(it) // add collected events to state
+                            }
+                    }
             }
         }
     }

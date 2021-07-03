@@ -215,5 +215,17 @@ enum class EventType {
     ForkEvent,
     PushEvent,
     ReleaseEvent,
-    WatchEvent
+    WatchEvent,
+    PublicEvent;
+
+    override fun toString(): String {
+        return when (this) {
+            CreateEvent -> "created"
+            ForkEvent -> "forked"
+            PushEvent -> "pushed to"
+            ReleaseEvent -> "created a release for"
+            WatchEvent -> "starred"
+            PublicEvent -> "publicly released"
+        }
+    }
 }

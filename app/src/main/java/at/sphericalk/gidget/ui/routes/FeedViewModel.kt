@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.model.Event
@@ -76,6 +77,37 @@ class FeedViewModel @Inject constructor(
                             }
                     }
             }
+        }
+    }
+
+    fun getAccessToken(
+        clientId: String,
+        clientSecret: String,
+        code: String,
+        redirectUrl: String
+    ) = liveData {
+        try {
+            repository.getAccessToken(
+                clientId,
+                clientSecret,
+                code,
+                redirectUrl
+            ).catch { e ->
+                Log.e(
+                    "VIEWMODEL",
+                    "Something went wrong fetching the auth token",
+                    e
+                )
+            }
+                .collect {
+                    if (it.error != null || it.access_token == null) {
+                    } else {
+                        val user = repository.getUser(it.access_token)
+                        emit(Pair(it.access_token, user.login))
+                    }
+                }
+        } catch (e: Exception) {
+            Log.e("VIEWMODEL", "Something went wrong fetching the auth token", e)
         }
     }
 }

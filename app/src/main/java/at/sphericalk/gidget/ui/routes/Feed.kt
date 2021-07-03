@@ -37,14 +37,13 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
-    val auth = FirebaseAuth.getInstance()
-
-    // check if current user is signed in
-    if (auth.currentUser == null) {
-        navController.navigate("welcome")
-    }
     val datastore = LocalActivity.current.dataStore
     val username = runBlocking { datastore.data.map { it[Constants.USERNAME] ?: "" }.first() }
+
+    // check if current user is signed in
+    if (username == null) {
+        navController.navigate("welcome")
+    }
 
     viewModel.fetchEvents()
 

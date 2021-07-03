@@ -1,7 +1,8 @@
 package at.sphericalk.gidget.ui.routes
 
 import android.app.Activity
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,7 +13,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.R
@@ -20,9 +20,6 @@ import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.OAuthCredential
-import com.google.firebase.auth.OAuthProvider
-import kotlinx.coroutines.runBlocking
 
 private lateinit var auth: FirebaseAuth
 
@@ -63,7 +60,7 @@ fun Welcome(navController: NavController) {
             ) {
                 val activity = LocalActivity.current
                 Text(
-                    text = "Welcome to Gidget,\n your new and improved GitHub feed",
+                    text = "Welcome to Gimmick,\n your new and improved GitHub feed",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h6
                 )
@@ -85,29 +82,31 @@ fun handleLogin(
     activity: Activity,
     onLoggedIn: () -> Unit,
 ) {
-    val provider = OAuthProvider.newBuilder("github.com")
-    provider.scopes = arrayListOf("read:user", "user:repo")
-
-    val pendingResult = auth.pendingAuthResult
-    if (pendingResult != null) {
-        pendingResult.addOnSuccessListener {
-            onLoggedIn()
-        }.addOnFailureListener {
-            Log.e("LOGIN", "Failure logging in", it)
-        }
-    } else {
-        auth.startActivityForSignInWithProvider(activity, provider.build())
-            .addOnSuccessListener {
-                val credential = it.credential as OAuthCredential
-                runBlocking {
-                    activity.dataStore.edit { prefs ->
-                        prefs[Constants.API_KEY] = credential.accessToken!!
-                        prefs[Constants.USERNAME] = it.additionalUserInfo?.username!!
-                    }
-                }
-                onLoggedIn()
-            }.addOnFailureListener {
-                Log.e("LOGIN", "Failure logging in", it)
-            }
-    }
+//    val provider = OAuthProvider.newBuilder("github.com")
+//    provider.scopes = arrayListOf("read:user", "user:repo")
+//
+//    val pendingResult = auth.pendingAuthResult
+//    if (pendingResult != null) {
+//        pendingResult.addOnSuccessListener {
+//            onLoggedIn()
+//        }.addOnFailureListener {
+//            Log.e("LOGIN", "Failure logging in", it)
+//        }
+//    } else {
+//        auth.startActivityForSignInWithProvider(activity, provider.build())
+//            .addOnSuccessListener {
+//                val credential = it.credential as OAuthCredential
+//                runBlocking {
+//                    activity.dataStore.edit { prefs ->
+//                        prefs[Constants.API_KEY] = credential.accessToken!!
+//                        prefs[Constants.USERNAME] = it.additionalUserInfo?.username!!
+//                    }
+//                }
+//                onLoggedIn()
+//            }.addOnFailureListener {
+//                Log.e("LOGIN", "Failure logging in", it)
+//            }
+//    }
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.OAUTH_URL))
+    activity.startActivity(intent)
 }

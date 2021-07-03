@@ -1,14 +1,18 @@
 package at.sphericalk.gidget.ui.routes
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -19,7 +23,9 @@ import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.R
+import at.sphericalk.gidget.model.languages
 import at.sphericalk.gidget.utils.Constants
+import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsPadding
@@ -94,7 +100,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                         modifier = Modifier.padding(start = 16.dp),
                     )
                 }
-                Card() {
+                Card {
                     Column(
                         modifier = Modifier
                             .padding(24.dp)
@@ -106,7 +112,34 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                             }
                         })
                         event.repoExtra?.description?.let {
-                            Text(text = it, fontSize = 14.sp, modifier = Modifier.padding(top = 8.dp))
+                            Text(
+                                text = it,
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    }
+                }
+                Row(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(text = "3 hours ago", fontSize = 12.sp)
+
+
+                    event.repoExtra?.language?.let {
+                        val color = languages[it]?.toColor() ?: Color.Transparent
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Canvas(modifier = Modifier.size(12.dp), onDraw = {
+                                drawCircle(color)
+                            })
+                            Text(
+                                text = it,
+                                fontSize = 12.sp,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
                         }
                     }
                 }

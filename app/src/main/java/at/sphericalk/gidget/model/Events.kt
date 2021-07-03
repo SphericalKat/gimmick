@@ -21,7 +21,7 @@ data class RepoExtra(
     val language: String? = null
 )
 
-val languages = Gson().fromJson(Constants.LANGUAGES, Map::class.java)
+val languages: Map<String, String?> = Gson().fromJson(Constants.LANGUAGES, Map::class.java) as Map<String, String?>
 
 data class Actor(
     val id: Long,

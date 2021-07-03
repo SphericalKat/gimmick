@@ -117,7 +117,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                 append(event.repo.name)
                             }
                         })
-                        event.repoExtra.description?.let {
+                        event.repoExtra?.description?.let {
                             Text(
                                 text = it,
                                 fontSize = 14.sp,
@@ -135,7 +135,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                     Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
 
 
-                    event.repoExtra.language?.let {
+                    event.repoExtra?.language?.let {
                         val color = languages[it]?.toColor() ?: Color.Transparent
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Canvas(modifier = Modifier.size(12.dp), onDraw = {

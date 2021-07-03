@@ -1,20 +1,23 @@
 package at.sphericalk.gidget.model
 
+import androidx.annotation.Keep
 import at.sphericalk.gidget.utils.Constants
 import com.google.gson.Gson
 
+@Keep
 data class Event(
     val id: String,
     val type: EventType,
     val actor: Actor,
     val repo: Repo,
-    var repoExtra: RepoExtra = RepoExtra(),
+    var repoExtra: RepoExtra? = RepoExtra(),
     val payload: Payload,
     val public: Boolean,
     val created_at: String,
     val org: Actor? = null
 )
 
+@Keep
 data class RepoExtra(
     val html_url: String? = null,
     val description: String? = null,
@@ -24,6 +27,7 @@ data class RepoExtra(
 val languages: Map<String, String?> =
     Gson().fromJson(Constants.LANGUAGES, Map::class.java) as Map<String, String?>
 
+@Keep
 data class Actor(
     val id: Long,
     val login: String,
@@ -33,6 +37,7 @@ data class Actor(
     val avatar_url: String
 )
 
+@Keep
 data class Payload(
     val action: Action? = null,
     val release: Release? = null,
@@ -50,11 +55,13 @@ data class Payload(
     val commits: List<Commit>? = null
 )
 
+@Keep
 enum class Action {
     Published,
     Started
 }
 
+@Keep
 data class Commit(
     val sha: String,
     val author: Author,
@@ -63,11 +70,13 @@ data class Commit(
     val url: String
 )
 
+@Keep
 data class Author(
     val email: String,
     val name: String
 )
 
+@Keep
 data class Forkee(
     val id: Long,
     val nodeID: String,
@@ -145,6 +154,7 @@ data class Forkee(
     val public: Boolean
 )
 
+@Keep
 data class License(
     val key: String,
     val name: String,
@@ -153,6 +163,7 @@ data class License(
     val nodeID: String
 )
 
+@Keep
 data class Owner(
     val login: String,
     val id: Long,
@@ -174,10 +185,12 @@ data class Owner(
     val siteAdmin: Boolean
 )
 
+@Keep
 enum class OwnerType {
     User
 }
 
+@Keep
 data class Release(
     val url: String,
     val assetsURL: String,
@@ -201,6 +214,7 @@ data class Release(
     val isShortDescriptionHTMLTruncated: Boolean
 )
 
+@Keep
 data class Asset(
     val url: String,
     val id: Long,
@@ -217,12 +231,14 @@ data class Asset(
     val browserDownloadURL: String
 )
 
+@Keep
 data class Repo(
     val id: Long,
     val name: String,
     val url: String
 )
 
+@Keep
 enum class EventType {
     CommitCommentEvent,
     CreateEvent,

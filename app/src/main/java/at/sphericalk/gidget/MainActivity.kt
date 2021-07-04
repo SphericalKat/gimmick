@@ -23,6 +23,7 @@ import at.sphericalk.gidget.ui.theme.GidgetTheme
 import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -35,6 +36,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var navController: NavHostController
 
+    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -77,6 +79,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@FlowPreview
 @Composable
 fun Home(viewModel: FeedViewModel, navController: NavHostController) {
     val dataStore = LocalActivity.current.dataStore

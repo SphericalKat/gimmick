@@ -37,7 +37,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
     val datastore = LocalActivity.current.dataStore
-    val username = runBlocking { datastore.data.map { it[Constants.USERNAME] ?: "" }.first() }
+    val username = runBlocking { datastore.data.map { it[Constants.USERNAME] }.first() }
 
     // check if current user is signed in
     if (username == null) {
@@ -63,87 +63,97 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
             },
         )
     }) {
-        LazyColumn(Modifier.padding(horizontal = 24.dp)) {
-            items(viewModel.events.sortedByDescending {
-                LocalDateTime.parse(
-                    it.created_at,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                )
-            }) { event ->
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 24.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = rememberCoilPainter(
-                            request = event.actor.avatar_url,
-                            requestBuilder = {
-                                transformations(CircleCropTransformation())
-                            },
-                            previewPlaceholder = R.drawable.ic_launcher_background,
-                            fadeIn = true
-                        ),
-                        contentDescription = event.actor.login,
-                        modifier = Modifier.size(32.dp, 32.dp),
+        if (viewModel.events.isEmpty()) {
+            Column(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(Modifier.padding(horizontal = 24.dp)) {
+                items(viewModel.events.sortedByDescending {
+                    LocalDateTime.parse(
+                        it.created_at,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
                     )
-                    Text(
-                        buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(event.actor.login)
-                            }
-                            append(" ")
-                            append(event.type.toString())
-                            append(" ")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(event.repo.name)
-                            }
-                        },
-                        modifier = Modifier.padding(start = 16.dp),
-                    )
-                }
-                Card {
-                    Column(
+                }) { event ->
+                    Row(
                         modifier = Modifier
-                            .padding(24.dp)
-                            .fillMaxWidth()
+                            .padding(vertical = 24.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append(event.repo.name)
+                        Image(
+                            painter = rememberCoilPainter(
+                                request = event.actor.avatar_url,
+                                requestBuilder = {
+                                    transformations(CircleCropTransformation())
+                                },
+                                previewPlaceholder = R.drawable.ic_launcher_background,
+                                fadeIn = true
+                            ),
+                            contentDescription = event.actor.login,
+                            modifier = Modifier.size(32.dp, 32.dp),
+                        )
+                        Text(
+                            buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(event.actor.login)
+                                }
+                                append(" ")
+                                append(event.type.toString())
+                                append(" ")
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(event.repo.name)
+                                }
+                            },
+                            modifier = Modifier.padding(start = 16.dp),
+                        )
+                    }
+                    Card {
+                        Column(
+                            modifier = Modifier
+                                .padding(24.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(buildAnnotatedString {
+                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                    append(event.repo.name)
+                                }
+                            })
+                            event.repoExtra?.description?.let {
+                                Text(
+                                    text = it,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                             }
-                        })
-                        event.repoExtra?.description?.let {
-                            Text(
-                                text = it,
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
                         }
                     }
-                }
-                Row(
-                    Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
+                    Row(
+                        Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
 
 
-                    event.repoExtra?.language?.let {
-                        val color = languages[it]?.toColor() ?: Color.Transparent
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Canvas(modifier = Modifier.size(12.dp), onDraw = {
-                                drawCircle(color)
-                            })
-                            Text(
-                                text = it,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
+                        event.repoExtra?.language?.let {
+                            val color = languages[it]?.toColor() ?: Color.Transparent
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Canvas(modifier = Modifier.size(12.dp), onDraw = {
+                                    drawCircle(color)
+                                })
+                                Text(
+                                    text = it,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
                         }
                     }
                 }

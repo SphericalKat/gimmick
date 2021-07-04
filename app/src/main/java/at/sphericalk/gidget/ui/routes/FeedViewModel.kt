@@ -13,10 +13,7 @@ import at.sphericalk.gidget.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,25 +31,25 @@ class FeedViewModel @Inject constructor(
     @FlowPreview
     fun fetchEvents() {
         // fetch events from DB
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getEventsFromDb()
-                .catch { exception -> // catch any nasty exceptions
-                    Log.e(
-                        "VIEWMODEL",
-                        "Error while fetching events from DB:",
-                        exception
-                    )
-                }.collect {
-                    events.clear()
-                    events.addAll(it)
-                }
-        }
+        repository.getEventsFromDb()
+            .onEach {
+                events.clear()
+                events.addAll(it)
+            }
+            .catch { exception -> // catch any nasty exceptions
+                Log.e(
+                    "VIEWMODEL",
+                    "Error while fetching events from DB:",
+                    exception
+                )
+            }.launchIn(viewModelScope)
 
         // retrieve events from API and update db
         viewModelScope.launch(Dispatchers.IO) {
             // retrieve token and username
-            val token = app.dataStore.data.map { it[Constants.API_KEY] ?: "" }.first()
-            val username = app.dataStore.data.map { it[Constants.USERNAME] ?: "" }.first()
+            val prefs = app.dataStore.data.first()
+            val token = prefs[Constants.API_KEY] ?: ""
+            val username = prefs[Constants.USERNAME] ?: ""
 
             // fetch events from API
             repository.getReceivedEvents(token, username)

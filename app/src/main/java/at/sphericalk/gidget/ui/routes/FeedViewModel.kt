@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,28 +33,29 @@ class FeedViewModel @Inject constructor(
 
     @FlowPreview
     fun fetchEvents() {
-        // launch coroutine
+        // fetch events from DB
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getEventsFromDb()
+                .catch { exception -> // catch any nasty exceptions
+                    Log.e(
+                        "VIEWMODEL",
+                        "Error while fetching events from DB:",
+                        exception
+                    )
+                }.collect {
+                    events.clear()
+                    events.addAll(it)
+                }
+        }
+
+        // retrieve events from API and update db
         viewModelScope.launch(Dispatchers.IO) {
             // retrieve token and username
-            app.dataStore.data.map {
-                Pair(it[Constants.API_KEY] ?: "", it[Constants.USERNAME] ?: "")
-            }.collect { data ->
-                // fetch events from API
-                viewModelScope.launch {
-                    repository.getEventsFromDb()
-                        .catch { exception -> // catch any nasty exceptions
-                            Log.e(
-                                "VIEWMODEL",
-                                "Error while fetching events:",
-                                exception
-                            )
-                        }.collect {
-                            events.clear()
-                            events.addAll(it)
-                        }
-                }
-                repository.getReceivedEvents(data.first, data.second)
-            }
+            val token = app.dataStore.data.map { it[Constants.API_KEY] ?: "" }.first()
+            val username = app.dataStore.data.map { it[Constants.USERNAME] ?: "" }.first()
+
+            // fetch events from API
+            repository.getReceivedEvents(token, username)
         }
     }
 

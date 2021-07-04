@@ -271,7 +271,7 @@ enum class EventType {
         IssueCommentEvent -> "commented on an issue in"
         IssuesEvent -> "created an issue for"
         MemberEvent -> "became a member of"
-        PullRequestEvent -> "create a pull request in"
+        PullRequestEvent -> "created a pull request in"
         PullRequestReviewEvent -> "reviewed a pull request in"
         PullRequestReviewCommentEvent -> "commented on a pull request review in"
     }

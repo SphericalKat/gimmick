@@ -97,7 +97,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                     requestBuilder = {
                                         transformations(CircleCropTransformation())
                                     },
-                                    previewPlaceholder = R.drawable.ic_launcher_background,
+                                    previewPlaceholder = R.drawable.github_icon,
                                     fadeIn = true
                                 ),
                                 contentDescription = event.actor.login,

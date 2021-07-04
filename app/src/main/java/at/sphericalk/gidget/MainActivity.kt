@@ -3,7 +3,6 @@ package at.sphericalk.gidget
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -25,7 +24,6 @@ import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.ProvideWindowInsets
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
 val Context.dataStore by preferencesDataStore(name = "settings")
@@ -83,7 +81,7 @@ class MainActivity : ComponentActivity() {
 fun Home(viewModel: FeedViewModel, navController: NavHostController) {
     val dataStore = LocalActivity.current.dataStore
 
-    val token = runBlocking { dataStore.data.map { it[Constants.API_KEY] }.first() }
+    val token = runBlocking { dataStore.data.first()[Constants.API_KEY] }
     val startDestination = if (token == null) "welcome" else "feed"
 
     NavHost(navController = navController, startDestination = startDestination) {

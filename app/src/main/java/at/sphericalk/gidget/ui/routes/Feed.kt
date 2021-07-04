@@ -22,6 +22,7 @@ import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.R
 import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.model.languages
+import at.sphericalk.gidget.ui.composables.Loading
 import at.sphericalk.gidget.utils.Constants
 import at.sphericalk.gidget.utils.timeAgo
 import at.sphericalk.gidget.utils.toColor
@@ -64,13 +65,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
         )
     }) {
         if (viewModel.events.isEmpty()) {
-            Column(
-                Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator()
-            }
+            Loading()
         } else {
             LazyColumn(Modifier.padding(horizontal = 24.dp)) {
                 items(viewModel.events.sortedByDescending {

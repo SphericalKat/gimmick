@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,12 +31,16 @@ import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@FlowPreview
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
     val datastore = LocalActivity.current.dataStore
@@ -67,87 +73,92 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
         if (viewModel.events.isEmpty()) {
             Loading()
         } else {
-            LazyColumn(Modifier.padding(horizontal = 24.dp)) {
-                items(viewModel.events.sortedByDescending {
-                    LocalDateTime.parse(
-                        it.created_at,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                    )
-                }) { event ->
-                    Row(
-                        modifier = Modifier
-                            .padding(vertical = 24.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Image(
-                            painter = rememberCoilPainter(
-                                request = event.actor.avatar_url,
-                                requestBuilder = {
-                                    transformations(CircleCropTransformation())
-                                },
-                                previewPlaceholder = R.drawable.ic_launcher_background,
-                                fadeIn = true
-                            ),
-                            contentDescription = event.actor.login,
-                            modifier = Modifier.size(32.dp, 32.dp),
+            val isRefreshing by viewModel.isRefreshing.collectAsState()
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing),
+                onRefresh = { viewModel.refresh() }) {
+                LazyColumn(Modifier.padding(horizontal = 24.dp)) {
+                    items(viewModel.events.sortedByDescending {
+                        LocalDateTime.parse(
+                            it.created_at,
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
                         )
-                        Text(
-                            buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(event.actor.login)
-                                }
-                                append(" ")
-                                append(event.type.toString())
-                                append(" ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(event.repo.name)
-                                }
-                            },
-                            modifier = Modifier.padding(start = 16.dp),
-                        )
-                    }
-                    Card {
-                        Column(
+                    }) { event ->
+                        Row(
                             modifier = Modifier
-                                .padding(24.dp)
-                                .fillMaxWidth()
+                                .padding(vertical = 24.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(event.repo.name)
+                            Image(
+                                painter = rememberCoilPainter(
+                                    request = event.actor.avatar_url,
+                                    requestBuilder = {
+                                        transformations(CircleCropTransformation())
+                                    },
+                                    previewPlaceholder = R.drawable.ic_launcher_background,
+                                    fadeIn = true
+                                ),
+                                contentDescription = event.actor.login,
+                                modifier = Modifier.size(32.dp, 32.dp),
+                            )
+                            Text(
+                                buildAnnotatedString {
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(event.actor.login)
+                                    }
+                                    append(" ")
+                                    append(event.type.toString())
+                                    append(" ")
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(event.repo.name)
+                                    }
+                                },
+                                modifier = Modifier.padding(start = 16.dp),
+                            )
+                        }
+                        Card {
+                            Column(
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(buildAnnotatedString {
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                        append(event.repo.name)
+                                    }
+                                })
+                                event.repoExtra?.description?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.padding(top = 8.dp)
+                                    )
                                 }
-                            })
-                            event.repoExtra?.description?.let {
-                                Text(
-                                    text = it,
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.padding(top = 8.dp)
-                                )
                             }
                         }
-                    }
-                    Row(
-                        Modifier
-                            .padding(vertical = 8.dp)
-                            .fillMaxSize(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
+                        Row(
+                            Modifier
+                                .padding(vertical = 8.dp)
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = event.created_at.timeAgo(), fontSize = 12.sp)
 
 
-                        event.repoExtra?.language?.let {
-                            val color = languages[it]?.toColor() ?: Color.Transparent
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Canvas(modifier = Modifier.size(12.dp), onDraw = {
-                                    drawCircle(color)
-                                })
-                                Text(
-                                    text = it,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
+                            event.repoExtra?.language?.let {
+                                val color = languages[it]?.toColor() ?: Color.Transparent
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Canvas(modifier = Modifier.size(12.dp), onDraw = {
+                                        drawCircle(color)
+                                    })
+                                    Text(
+                                        text = it,
+                                        fontSize = 12.sp,
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                }
                             }
                         }
                     }

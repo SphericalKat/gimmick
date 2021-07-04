@@ -28,6 +28,11 @@ class FeedViewModel @Inject constructor(
     var events = mutableStateListOf<Event>()
         private set
 
+    private val _isRefreshing = MutableStateFlow(false)
+
+    val isRefreshing: StateFlow<Boolean>
+        get() = _isRefreshing.asStateFlow()
+
     @FlowPreview
     fun fetchEvents() {
         // fetch events from DB
@@ -49,6 +54,24 @@ class FeedViewModel @Inject constructor(
 
             // fetch events from API
             repository.fetchEvents(token, username).collect { repository.saveEventToDb(it) }
+        }
+    }
+
+    @FlowPreview
+    fun refresh() {
+        // retrieve events from API and update db
+        viewModelScope.launch(Dispatchers.IO) {
+            _isRefreshing.emit(true)
+            // retrieve token and username
+            val prefs = app.dataStore.data.first()
+            val token = prefs[Constants.API_KEY] ?: ""
+            val username = prefs[Constants.USERNAME] ?: ""
+
+            // fetch events from API
+            repository.fetchEvents(token, username).collect {
+                repository.saveEventToDb(it)
+                _isRefreshing.emit(false)
+            }
         }
     }
 

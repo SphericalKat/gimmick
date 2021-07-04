@@ -101,4 +101,13 @@ dependencies {
     implementation "androidx.room:room-runtime:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
     kapt "androidx.room:room-compiler:2.3.0"
+
+    final def markwon_version = '4.6.2'
+
+    implementation"io.noties.markwon:core:$markwon_version"
+    implementation"io.noties.markwon:ext-strikethrough:$markwon_version"
+    implementation"io.noties.markwon:ext-tables:$markwon_version"
+    implementation"io.noties.markwon:html:$markwon_version"
+    implementation"io.noties.markwon:image-coil:$markwon_version"
+    implementation"io.noties.markwon:linkify:$markwon_version"
 }

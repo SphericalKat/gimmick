@@ -23,6 +23,8 @@ import androidx.navigation.NavController
 import at.sphericalk.gidget.LocalActivity
 import at.sphericalk.gidget.R
 import at.sphericalk.gidget.dataStore
+import at.sphericalk.gidget.model.Event
+import at.sphericalk.gidget.model.EventType
 import at.sphericalk.gidget.model.languages
 import at.sphericalk.gidget.ui.composables.Loading
 import at.sphericalk.gidget.utils.Constants
@@ -40,6 +42,7 @@ import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@ExperimentalMaterialApi
 @FlowPreview
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
@@ -118,7 +121,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                 modifier = Modifier.padding(start = 16.dp),
                             )
                         }
-                        Card {
+                        Card(onClick = { handleCLick(navController, viewModel, event) }) {
                             Column(
                                 modifier = Modifier
                                     .padding(24.dp)
@@ -164,6 +167,15 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                     }
                 }
             }
+        }
+    }
+}
+
+fun handleCLick(navController: NavController, viewModel: FeedViewModel, event: Event) {
+    when (event.type) {
+        EventType.ReleaseEvent -> {
+            viewModel.selectedEvent.value = event
+            navController.navigate("release")
         }
     }
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -18,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.sphericalk.gidget.ui.routes.Feed
 import at.sphericalk.gidget.ui.routes.FeedViewModel
+import at.sphericalk.gidget.ui.routes.Release
 import at.sphericalk.gidget.ui.routes.Welcome
 import at.sphericalk.gidget.ui.theme.GidgetTheme
 import at.sphericalk.gidget.utils.Constants
@@ -30,6 +32,7 @@ import kotlinx.coroutines.runBlocking
 val Context.dataStore by preferencesDataStore(name = "settings")
 val LocalActivity = compositionLocalOf<Activity> { error("No context found!") }
 
+@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -39,7 +42,7 @@ class MainActivity : ComponentActivity() {
     @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+//        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ProvideWindowInsets {
                 GidgetTheme {
@@ -79,6 +82,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalMaterialApi
 @FlowPreview
 @Composable
 fun Home(viewModel: FeedViewModel, navController: NavHostController) {
@@ -90,5 +94,6 @@ fun Home(viewModel: FeedViewModel, navController: NavHostController) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("welcome") { Welcome(navController) }
         composable("feed") { Feed(navController, viewModel) }
+        composable("release") { Release(navController, viewModel) }
     }
 }

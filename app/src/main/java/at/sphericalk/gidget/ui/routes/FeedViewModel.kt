@@ -3,6 +3,7 @@ package at.sphericalk.gidget.ui.routes
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -32,6 +33,8 @@ class FeedViewModel @Inject constructor(
 
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
+
+    var selectedEvent = mutableStateOf<Event?>(null)
 
     @FlowPreview
     fun fetchEvents() {

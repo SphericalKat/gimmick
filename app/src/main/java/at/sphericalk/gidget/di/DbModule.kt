@@ -16,7 +16,9 @@ object DbModule {
     @Provides
     @Singleton
     fun providesAppDb(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, AppDb::class.java, "gimmick-db").build()
+        Room.databaseBuilder(context, AppDb::class.java, "gimmick-db")
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Singleton

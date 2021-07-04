@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-
             ProvideWindowInsets {
                 GidgetTheme {
                     CompositionLocalProvider(LocalActivity provides this) {

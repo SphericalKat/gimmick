@@ -77,6 +77,7 @@ class FeedViewModel @Inject constructor(
             }
                 .collect {
                     if (it.error != null || it.access_token == null) {
+                        Log.e("VIEWMODEL", "Could not fetch access token")
                     } else {
                         val user = repository.getUser(it.access_token)
                         emit(Pair(it.access_token, user.login))

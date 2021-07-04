@@ -1,20 +1,25 @@
 package at.sphericalk.gidget.model
 
 import androidx.annotation.Keep
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import at.sphericalk.gidget.utils.Constants
 import com.google.gson.Gson
 
 @Keep
+@Entity
 data class Event(
-    val id: String,
+    @PrimaryKey val id: String,
     val type: EventType,
-    val actor: Actor,
-    val repo: Repo,
-    var repoExtra: RepoExtra? = RepoExtra(),
-    val payload: Payload,
+    @Embedded val actor: Actor,
+    @Embedded val repo: Repo,
+    @Embedded var repoExtra: RepoExtra? = RepoExtra(),
+    @Embedded val payload: Payload,
     val public: Boolean,
     val created_at: String,
-    val org: Actor? = null
+    @Ignore val org: Actor? = null
 )
 
 @Keep
@@ -29,7 +34,7 @@ val languages: Map<String, String?> =
 
 @Keep
 data class Actor(
-    val id: Long,
+    @Ignore val id: Long,
     val login: String,
     val display_login: String? = null,
     val gravatar_id: String,
@@ -40,8 +45,7 @@ data class Actor(
 @Keep
 data class Payload(
     val action: Action? = null,
-    val release: Release? = null,
-    val forkee: Forkee? = null,
+    @Embedded val release: Release? = null,
     val ref: String? = null,
     val refType: String? = null,
     val masterBranch: String? = null,
@@ -52,7 +56,6 @@ data class Payload(
     val distinctSize: Long? = null,
     val head: String? = null,
     val before: String? = null,
-    val commits: List<Commit>? = null
 )
 
 @Keep
@@ -60,108 +63,6 @@ enum class Action {
     Published,
     Started
 }
-
-@Keep
-data class Commit(
-    val sha: String,
-    val author: Author,
-    val message: String,
-    val distinct: Boolean,
-    val url: String
-)
-
-@Keep
-data class Author(
-    val email: String,
-    val name: String
-)
-
-@Keep
-data class Forkee(
-    val id: Long,
-    val nodeID: String,
-    val name: String,
-    val fullName: String,
-    val private: Boolean,
-    val owner: Owner,
-    val htmlURL: String,
-    val description: String,
-    val fork: Boolean,
-    val url: String,
-    val forksURL: String,
-    val keysURL: String,
-    val collaboratorsURL: String,
-    val teamsURL: String,
-    val hooksURL: String,
-    val issueEventsURL: String,
-    val eventsURL: String,
-    val assigneesURL: String,
-    val branchesURL: String,
-    val tagsURL: String,
-    val blobsURL: String,
-    val gitTagsURL: String,
-    val gitRefsURL: String,
-    val treesURL: String,
-    val statusesURL: String,
-    val languagesURL: String,
-    val stargazersURL: String,
-    val contributorsURL: String,
-    val subscribersURL: String,
-    val subscriptionURL: String,
-    val commitsURL: String,
-    val gitCommitsURL: String,
-    val commentsURL: String,
-    val issueCommentURL: String,
-    val contentsURL: String,
-    val compareURL: String,
-    val mergesURL: String,
-    val archiveURL: String,
-    val downloadsURL: String,
-    val issuesURL: String,
-    val pullsURL: String,
-    val milestonesURL: String,
-    val notificationsURL: String,
-    val labelsURL: String,
-    val releasesURL: String,
-    val deploymentsURL: String,
-    val createdAt: String,
-    val updatedAt: String,
-    val pushedAt: String,
-    val gitURL: String,
-    val sshURL: String,
-    val cloneURL: String,
-    val svnURL: String,
-    val homepage: String? = null,
-    val size: Long,
-    val stargazersCount: Long,
-    val watchersCount: Long,
-    val language: Any? = null,
-    val hasIssues: Boolean,
-    val hasProjects: Boolean,
-    val hasDownloads: Boolean,
-    val hasWiki: Boolean,
-    val hasPages: Boolean,
-    val forksCount: Long,
-    val mirrorURL: Any? = null,
-    val archived: Boolean,
-    val disabled: Boolean,
-    val openIssuesCount: Long,
-    val license: License? = null,
-    val forks: Long,
-    val openIssues: Long,
-    val watchers: Long,
-    val defaultBranch: String,
-    val public: Boolean
-)
-
-@Keep
-data class License(
-    val key: String,
-    val name: String,
-    val spdxID: String,
-    val url: String,
-    val nodeID: String
-)
 
 @Keep
 data class Owner(
@@ -181,14 +82,8 @@ data class Owner(
     val reposURL: String,
     val eventsURL: String,
     val receivedEventsURL: String,
-    val type: OwnerType,
     val siteAdmin: Boolean
 )
-
-@Keep
-enum class OwnerType {
-    User
-}
 
 @Keep
 data class Release(
@@ -217,11 +112,11 @@ data class Release(
 @Keep
 data class Asset(
     val url: String,
-    val id: Long,
+    @Ignore val id: Long,
     val nodeID: String,
     val name: String,
     val label: String,
-    val uploader: Owner,
+    @Ignore val uploader: Owner,
     val contentType: String,
     val state: String,
     val size: Long,
@@ -233,7 +128,7 @@ data class Asset(
 
 @Keep
 data class Repo(
-    val id: Long,
+    @Ignore val id: Long,
     val name: String,
     val url: String
 )

@@ -1,5 +1,8 @@
 package at.sphericalk.gidget.ui.routes
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -77,6 +81,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
             Loading()
         } else {
             val isRefreshing by viewModel.isRefreshing.collectAsState()
+            val context = LocalContext.current
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing),
                 onRefresh = { viewModel.refresh() }) {
@@ -121,7 +126,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                 modifier = Modifier.padding(start = 16.dp),
                             )
                         }
-                        Card(onClick = { handleCLick(navController, viewModel, event) }) {
+                        Card(onClick = { handleCLick(navController, viewModel, event, context) }) {
                             Column(
                                 modifier = Modifier
                                     .padding(24.dp)
@@ -171,11 +176,23 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
     }
 }
 
-fun handleCLick(navController: NavController, viewModel: FeedViewModel, event: Event) {
+fun handleCLick(
+    navController: NavController,
+    viewModel: FeedViewModel,
+    event: Event,
+    context: Context
+) {
     when (event.type) {
         EventType.ReleaseEvent -> {
             viewModel.selectedEvent.value = event
             navController.navigate("release")
+        }
+        else -> {
+            val url = event.repoExtra?.html_url
+            if (url != null) {
+                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+            }
+
         }
     }
 }

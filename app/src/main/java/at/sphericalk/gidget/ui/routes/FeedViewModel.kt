@@ -36,12 +36,8 @@ class FeedViewModel @Inject constructor(
                 events.clear()
                 events.addAll(it)
             }
-            .catch { exception -> // catch any nasty exceptions
-                Log.e(
-                    "VIEWMODEL",
-                    "Error while fetching events from DB:",
-                    exception
-                )
+            .catch { e -> // catch any nasty exceptions
+                Log.e("VIEWMODEL", "Error while fetching events from DB:", e)
             }.launchIn(viewModelScope)
 
         // retrieve events from API and update db
@@ -52,7 +48,7 @@ class FeedViewModel @Inject constructor(
             val username = prefs[Constants.USERNAME] ?: ""
 
             // fetch events from API
-            repository.getReceivedEvents(token, username)
+            repository.fetchEvents(token, username).collect { repository.saveEventToDb(it) }
         }
     }
 
@@ -69,20 +65,15 @@ class FeedViewModel @Inject constructor(
                 code,
                 redirectUrl
             ).catch { e ->
-                Log.e(
-                    "VIEWMODEL",
-                    "Something went wrong fetching the auth token",
-                    e
-                )
-            }
-                .collect {
-                    if (it.error != null || it.access_token == null) {
-                        Log.e("VIEWMODEL", "Could not fetch access token")
-                    } else {
-                        val user = repository.getUser(it.access_token)
-                        emit(Pair(it.access_token, user.login))
-                    }
+                Log.e("VIEWMODEL", "Something went wrong fetching the auth token", e)
+            }.collect {
+                if (it.error != null || it.access_token == null) {
+                    Log.e("VIEWMODEL", "Could not fetch access token")
+                } else {
+                    val user = repository.getUser(it.access_token)
+                    emit(Pair(it.access_token, user.login))
                 }
+            }
         } catch (e: Exception) {
             Log.e("VIEWMODEL", "Something went wrong fetching the auth token", e)
         }

@@ -1,10 +1,7 @@
 package at.sphericalk.gidget.model
 
 import androidx.annotation.Keep
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 import at.sphericalk.gidget.utils.Constants
 import com.google.gson.Gson
 
@@ -16,16 +13,14 @@ data class Event(
     @Embedded val actor: Actor,
     @Embedded val repo: Repo,
     @Embedded var repoExtra: RepoExtra? = RepoExtra(),
-    @Embedded val payload: Payload,
-    val public: Boolean,
-    val created_at: String,
-    @Ignore val org: Actor? = null
+    @Embedded val payload: Payload?,
+    @ColumnInfo(name = "event_created_at") val created_at: String,
 )
 
 @Keep
 data class RepoExtra(
-    val html_url: String? = null,
-    val description: String? = null,
+    @ColumnInfo(name = "repo_extra_html_url") val html_url: String? = null,
+    @ColumnInfo(name = "repo_extra_description") val description: String? = null,
     val language: String? = null
 )
 
@@ -34,11 +29,10 @@ val languages: Map<String, String?> =
 
 @Keep
 data class Actor(
-    @Ignore val id: Long,
     val login: String,
     val display_login: String? = null,
     val gravatar_id: String,
-    val url: String,
+    @ColumnInfo(name = "actor_url") val url: String,
     val avatar_url: String
 )
 
@@ -47,13 +41,13 @@ data class Payload(
     val action: Action? = null,
     @Embedded val release: Release? = null,
     val ref: String? = null,
-    val refType: String? = null,
-    val masterBranch: String? = null,
-    val description: String? = null,
-    val pusherType: String? = null,
-    val pushID: Long? = null,
+    val ref_type: String? = null,
+    val master_branch: String? = null,
+    @ColumnInfo(name = "payload_description") val description: String? = null,
+    val pusher_type: String? = null,
+    val push_id: Long? = null,
     val size: Long? = null,
-    val distinctSize: Long? = null,
+    val distinct_size: Long? = null,
     val head: String? = null,
     val before: String? = null,
 )
@@ -64,73 +58,46 @@ enum class Action {
     Started
 }
 
-@Keep
-data class Owner(
-    val login: String,
-    val id: Long,
-    val nodeID: String,
-    val avatarURL: String,
-    val gravatarID: String,
-    val url: String,
-    val htmlURL: String,
-    val followersURL: String,
-    val followingURL: String,
-    val gistsURL: String,
-    val starredURL: String,
-    val subscriptionsURL: String,
-    val organizationsURL: String,
-    val reposURL: String,
-    val eventsURL: String,
-    val receivedEventsURL: String,
-    val siteAdmin: Boolean
-)
 
 @Keep
 data class Release(
-    val url: String,
-    val assetsURL: String,
-    val uploadURL: String,
-    val htmlURL: String,
-    val id: Long,
-    val author: Owner,
-    val nodeID: String,
-    val tagName: String,
-    val targetCommitish: String,
+    @ColumnInfo(name = "release_url") val url: String,
+    val assets_url: String,
+    val upload_url: String,
+    @ColumnInfo(name = "release_html_url")  val html_url: String,
+    val tag_name: String,
+    val target_commitish: String,
     val name: String,
     val draft: Boolean,
     val prerelease: Boolean,
-    val createdAt: String,
-    val publishedAt: String,
+    @ColumnInfo(name = "release_created_at") val created_at: String,
+    val published_at: String,
     val assets: List<Asset>,
-    val tarballURL: String,
-    val zipballURL: String,
+    val tarball_url: String,
+    val zipball_url: String,
     val body: String,
-    val shortDescriptionHTML: String? = null,
-    val isShortDescriptionHTMLTruncated: Boolean
+    val short_description_html: String? = null,
+    val is_short_description_html_truncated: Boolean
 )
 
 @Keep
 data class Asset(
-    val url: String,
-    @Ignore val id: Long,
-    val nodeID: String,
+    @ColumnInfo(name = "asset_url") val url: String,
     val name: String,
     val label: String,
-    @Ignore val uploader: Owner,
-    val contentType: String,
+    val content_type: String,
     val state: String,
     val size: Long,
-    val downloadCount: Long,
-    val createdAt: String,
-    val updatedAt: String,
-    val browserDownloadURL: String
+    val download_count: Long,
+    @ColumnInfo(name = "asset_created_at") val created_at: String,
+    @ColumnInfo(name = "asset_updated_at") val updated_at: String,
+    val browser_download_url: String
 )
 
 @Keep
 data class Repo(
-    @Ignore val id: Long,
-    val name: String,
-    val url: String
+    @ColumnInfo(name = "repo_name") val name: String,
+    @ColumnInfo(name = "repo_url") val url: String
 )
 
 @Keep

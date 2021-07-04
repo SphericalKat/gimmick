@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
         val uri = intent.data
 
         if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
-            Log.d("TAG", uri.toString())
             viewModel.getAccessToken(
                 BuildConfig.CLIENT_ID,
                 BuildConfig.CLIENT_SECRET,
@@ -71,7 +70,6 @@ class MainActivity : ComponentActivity() {
                             prefs[Constants.API_KEY] = it.first
                             prefs[Constants.USERNAME] = it.second
                         }
-                        Log.d("TOKEN", it.toString())
                     }
                     navController.navigate("feed") {
                         popUpTo("welcome") { inclusive = true }
@@ -87,7 +85,6 @@ fun Home(viewModel: FeedViewModel, navController: NavHostController) {
     val dataStore = LocalActivity.current.dataStore
 
     val token = runBlocking { dataStore.data.map { it[Constants.API_KEY] }.first() }
-    Log.d("TOKEN", token.toString())
     val startDestination = if (token == null) "welcome" else "feed"
 
     NavHost(navController = navController, startDestination = startDestination) {

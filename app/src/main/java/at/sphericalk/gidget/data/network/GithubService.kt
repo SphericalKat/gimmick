@@ -22,7 +22,7 @@ interface GithubService {
         @Header("accept") accept: String = "application/vnd.github.v3+json",
         @Header("Authorization") token: String,
         @Path("username") username: String,
-        @Query("per_page") perPage: Int = 1
+        @Query("per_page") perPage: Int = 60
     ): List<Event>
 
     @GET("/user")

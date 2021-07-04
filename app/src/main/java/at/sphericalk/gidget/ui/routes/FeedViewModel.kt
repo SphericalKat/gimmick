@@ -12,7 +12,10 @@ import at.sphericalk.gidget.repo.GithubRepository
 import at.sphericalk.gidget.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,10 +30,8 @@ class FeedViewModel @Inject constructor(
     var events = mutableStateListOf<Event>()
         private set
 
+    @FlowPreview
     fun fetchEvents() {
-        // clear events
-        events.clear()
-
         // launch coroutine
         viewModelScope.launch(Dispatchers.IO) {
             // retrieve token and username
@@ -38,44 +39,20 @@ class FeedViewModel @Inject constructor(
                 Pair(it[Constants.API_KEY] ?: "", it[Constants.USERNAME] ?: "")
             }.collect { data ->
                 // fetch events from API
+                viewModelScope.launch {
+                    repository.getEventsFromDb()
+                        .catch { exception -> // catch any nasty exceptions
+                            Log.e(
+                                "VIEWMODEL",
+                                "Error while fetching events:",
+                                exception
+                            )
+                        }.collect {
+                            events.clear()
+                            events.addAll(it)
+                        }
+                }
                 repository.getReceivedEvents(data.first, data.second)
-                    .catch { exception -> // catch any nasty exceptions
-                        Log.e(
-                            "VIEWMODEL",
-                            "Error while fetching events:",
-                            exception
-                        )
-                    }.collect { eventList -> // collect list of events
-                        eventList.asFlow() // convert to flow, we want to fetch repos too
-                            .flatMapMerge { // use flatmapmerge to fetch repo per event
-                                flow {
-                                    try { // try getting repo
-                                        val extras =
-                                            repository.getRepo(data.first, it.repo.name)
-                                        it.repoExtra = extras
-                                    } catch (e: Exception) { // catch nasty exceptions
-                                        Log.e(
-                                            "VIEWMODEL",
-                                            "Error while fetching events:",
-                                            e
-                                        )
-                                    }
-                                    emit(it) // emit event
-                                }
-                            }
-                            .onCompletion { exception -> // moar exception handling
-                                if (exception != null) {
-                                    Log.e(
-                                        "VIEWMODEL",
-                                        "Error while fetching events:",
-                                        exception
-                                    )
-                                }
-                            }
-                            .collect {
-                                events.add(it) // add collected events to state
-                            }
-                    }
             }
         }
     }

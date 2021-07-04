@@ -2,7 +2,12 @@ package at.sphericalk.gidget.data.db
 
 import androidx.room.TypeConverter
 import at.sphericalk.gidget.model.Action
+import at.sphericalk.gidget.model.Asset
 import at.sphericalk.gidget.model.EventType
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+
 
 class Converters {
     @TypeConverter
@@ -47,15 +52,25 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromActionType(value: Action) = when (value) {
+    fun fromActionType(value: Action?) = when (value) {
         Action.Published -> 1
         Action.Started -> 2
+        else -> null
     }
 
     @TypeConverter
-    fun toActionType(value: int) = when(value) {
+    fun toActionType(value: Int?) = when (value) {
         1 -> Action.Published
         2 -> Action.Started
+        null -> null
         else -> throw IllegalStateException("unknown action type")
     }
+
+    @TypeConverter
+    fun fromAssetList(value: List<Asset>): String = Gson().toJson(value)
+
+    var listOfAssetType: Type = object : TypeToken<List<Asset>>() {}.type
+
+    @TypeConverter
+    fun toAssetList(value: String): List<Asset> = Gson().fromJson(value, listOfAssetType)
 }

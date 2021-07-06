@@ -36,6 +36,7 @@ import at.sphericalk.gidget.utils.timeAgo
 import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -85,7 +86,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
             SwipeRefresh(
                 state = rememberSwipeRefreshState(isRefreshing),
                 onRefresh = { viewModel.refresh() }) {
-                LazyColumn(Modifier.padding(horizontal = 24.dp)) {
+                LazyColumn(Modifier.padding(horizontal = 24.dp).navigationBarsPadding()) {
                     items(viewModel.events.sortedByDescending {
                         LocalDateTime.parse(
                             it.created_at,

@@ -42,7 +42,6 @@ class MainActivity : ComponentActivity() {
     @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             ProvideWindowInsets {
                 GidgetTheme {
@@ -53,6 +52,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        // This must be called after setContent
+        WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
     override fun onResume() {

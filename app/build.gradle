@@ -82,6 +82,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-insets:0.13.0"
     implementation "com.google.accompanist:accompanist-coil:0.13.0"
     implementation "com.google.accompanist:accompanist-swiperefresh:0.13.0"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.13.0"
 
     // datastore
     implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"

@@ -7,9 +7,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
@@ -24,6 +27,7 @@ import at.sphericalk.gidget.ui.routes.Welcome
 import at.sphericalk.gidget.ui.theme.GidgetTheme
 import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
@@ -45,6 +49,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProvideWindowInsets {
                 GidgetTheme {
+                    val systemUiController = rememberSystemUiController()
+                    val useDarkIcons = MaterialTheme.colors.isLight
+                    val bgColor = MaterialTheme.colors.background
+
+                    SideEffect {
+                        systemUiController.setStatusBarColor(color = Color.Transparent, darkIcons = useDarkIcons)
+                        systemUiController.setNavigationBarColor(color = bgColor, darkIcons = useDarkIcons)
+                    }
+
                     CompositionLocalProvider(LocalActivity provides this) {
                         navController = rememberNavController()
                         Home(viewModel, navController)
@@ -62,10 +75,10 @@ class MainActivity : ComponentActivity() {
 
         if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
             viewModel.getAccessToken(
-                BuildConfig.CLIENT_ID,
-                BuildConfig.CLIENT_SECRET,
-                uri?.getQueryParameter("code").toString(),
-                Constants.REDIRECT_URI
+                    BuildConfig.CLIENT_ID,
+                    BuildConfig.CLIENT_SECRET,
+                    uri?.getQueryParameter("code").toString(),
+                    Constants.REDIRECT_URI
             ).observe(this) {
                 if (it != null) {
                     runBlocking {

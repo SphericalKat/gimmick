@@ -14,8 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+
     </style>
 
     <style name="Theme.Gidget.NoActionBar">

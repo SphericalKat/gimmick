@@ -2,6 +2,7 @@ package at.sphericalk.gidget.ui.routes
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -42,18 +43,18 @@ fun Welcome(navController: NavController) {
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(30.dp),
                 modifier = Modifier
                     .padding(24.dp)
-                    .fillMaxSize()
 
             ) {
                 val activity = LocalActivity.current
                 var isLoading by remember { mutableStateOf(false) }
+                Image(painter = painterResource(id = R.drawable.ic_gimmick_icon), contentDescription = "Github Icon")
                 Text(
                     text = "Welcome to your new and improved GitHub feed.",
                     style = MaterialTheme.typography.h6

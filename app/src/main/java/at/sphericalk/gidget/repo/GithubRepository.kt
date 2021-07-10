@@ -26,7 +26,7 @@ class GithubRepository @Inject constructor(
 
     suspend fun saveEventToDb(event: Event) = eventDao.insertEvent(event)
 
-    @FlowPreview
+    @OptIn(FlowPreview::class)
     suspend fun fetchEvents(token: String, username: String) =
         dataSource.getReceivedEvents(token, username).asFlow().flatMapMerge {
             flow {

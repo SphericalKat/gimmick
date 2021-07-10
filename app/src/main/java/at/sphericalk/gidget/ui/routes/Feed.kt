@@ -41,15 +41,13 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@ExperimentalMaterialApi
-@FlowPreview
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Feed(navController: NavController, viewModel: FeedViewModel) {
     val datastore = LocalActivity.current.dataStore

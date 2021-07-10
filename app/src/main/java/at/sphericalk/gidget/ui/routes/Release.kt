@@ -24,9 +24,7 @@ import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.statusBarsPadding
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
 @Composable
 fun Release(navController: NavController, viewModel: FeedViewModel) {
     Scaffold(

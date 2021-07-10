@@ -13,7 +13,6 @@ import at.sphericalk.gidget.repo.GithubRepository
 import at.sphericalk.gidget.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,8 +21,7 @@ import javax.inject.Inject
 class FeedViewModel @Inject constructor(
     private val app: Application,
     private val repository: GithubRepository
-) :
-    AndroidViewModel(app) {
+) : AndroidViewModel(app) {
 
     // list of events, exposed as state
     var events = mutableStateListOf<Event>()
@@ -36,7 +34,6 @@ class FeedViewModel @Inject constructor(
 
     var selectedEvent = mutableStateOf<Event?>(null)
 
-    @FlowPreview
     fun fetchEvents() {
         // fetch events from DB
         repository.getEventsFromDb()
@@ -60,7 +57,6 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    @FlowPreview
     fun refresh() {
         // retrieve events from API and update db
         viewModelScope.launch(Dispatchers.IO) {

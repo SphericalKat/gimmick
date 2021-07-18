@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM event")
+    @Query("SELECT * FROM event ORDER BY event_created_at DESC")
     fun getAllEvents(): Flow<List<Event>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

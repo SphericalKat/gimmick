@@ -3,6 +3,7 @@ package at.sphericalk.gidget.ui.routes
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -92,12 +93,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                         applyTop = false,
                     )
                 ) {
-                    items(viewModel.events.sortedByDescending {
-                        LocalDateTime.parse(
-                            it.created_at,
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                        )
-                    }) { event ->
+                    items(viewModel.events) { event ->
                         Row(
                             modifier = Modifier
                                 .padding(vertical = 24.dp)

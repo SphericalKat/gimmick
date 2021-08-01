@@ -55,6 +55,13 @@ class Converters {
     fun fromActionType(value: Action?) = when (value) {
         Action.Published -> 1
         Action.Started -> 2
+        Action.Opened -> 3
+        Action.Closed -> 4
+        Action.Reopened -> 5
+        Action.Assigned -> 6
+        Action.Unassigned -> 7
+        Action.Labeled -> 8
+        Action.Unlabeled -> 9
         else -> null
     }
 
@@ -62,6 +69,13 @@ class Converters {
     fun toActionType(value: Int?) = when (value) {
         1 -> Action.Published
         2 -> Action.Started
+        3 -> Action.Opened
+        4 -> Action.Closed
+        5 -> Action.Reopened
+        6 -> Action.Assigned
+        7 -> Action.Unassigned
+        8 -> Action.Labeled
+        9 -> Action.Unlabeled
         null -> null
         else -> throw IllegalStateException("unknown action type")
     }

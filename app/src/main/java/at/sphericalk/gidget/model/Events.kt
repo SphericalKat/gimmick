@@ -55,7 +55,26 @@ data class Payload(
 @Keep
 enum class Action {
     Published,
-    Started
+    Started,
+    Opened,
+    Closed,
+    Reopened,
+    Assigned,
+    Unassigned,
+    Labeled,
+    Unlabeled;
+
+    override fun toString() = when (this) {
+        Published -> "published"
+        Started -> "started"
+        Opened -> "opened"
+        Closed -> "closed"
+        Reopened -> "reopened"
+        Assigned -> "assigned"
+        Unassigned -> "unassigned"
+        Labeled -> "labeled"
+        Unlabeled -> "unlabeled"
+    }
 }
 
 
@@ -131,7 +150,7 @@ enum class EventType {
         DeleteEvent -> "deleted"
         GollumEvent -> "created a wiki page for"
         IssueCommentEvent -> "commented on an issue in"
-        IssuesEvent -> "created an issue for"
+        IssuesEvent -> ""
         MemberEvent -> "became a member of"
         PullRequestEvent -> "created a pull request in"
         PullRequestReviewEvent -> "reviewed a pull request in"

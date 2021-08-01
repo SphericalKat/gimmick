@@ -117,6 +117,24 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                     }
                                     append(" ")
                                     append(event.type.toString())
+                                    when (event.type) {
+                                        EventType.DeleteEvent -> {
+                                            append(" a ${event.payload?.ref_type}, ")
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(event.payload?.ref.toString())
+                                            }
+                                            append(" in")
+                                        }
+                                        EventType.CreateEvent -> {
+                                            if (event.payload?.ref_type != "repository") {
+                                                append(" a ${event.payload?.ref_type}, ")
+                                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                    append(event.payload?.ref.toString())
+                                                }
+                                                append(" in")
+                                            }
+                                        }
+                                    }
                                     append(" ")
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                                         append(event.repo.name)

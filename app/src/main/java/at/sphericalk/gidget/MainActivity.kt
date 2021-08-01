@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -29,21 +28,18 @@ import at.sphericalk.gidget.utils.Constants
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 val LocalActivity = compositionLocalOf<Activity> { error("No context found!") }
 
-@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var navController: NavHostController
 
-    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,8 +50,14 @@ class MainActivity : ComponentActivity() {
                     val bgColor = MaterialTheme.colors.background
 
                     SideEffect {
-                        systemUiController.setStatusBarColor(color = Color.Transparent, darkIcons = useDarkIcons)
-                        systemUiController.setNavigationBarColor(color = bgColor, darkIcons = useDarkIcons)
+                        systemUiController.setStatusBarColor(
+                            color = Color.Transparent,
+                            darkIcons = useDarkIcons
+                        )
+                        systemUiController.setNavigationBarColor(
+                            color = bgColor,
+                            darkIcons = useDarkIcons
+                        )
                     }
 
                     CompositionLocalProvider(LocalActivity provides this) {
@@ -75,10 +77,10 @@ class MainActivity : ComponentActivity() {
 
         if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
             viewModel.getAccessToken(
-                    BuildConfig.CLIENT_ID,
-                    BuildConfig.CLIENT_SECRET,
-                    uri?.getQueryParameter("code").toString(),
-                    Constants.REDIRECT_URI
+                BuildConfig.CLIENT_ID,
+                BuildConfig.CLIENT_SECRET,
+                uri?.getQueryParameter("code").toString(),
+                Constants.REDIRECT_URI
             ).observe(this) {
                 if (it != null) {
                     runBlocking {
@@ -96,8 +98,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@ExperimentalMaterialApi
-@FlowPreview
 @Composable
 fun Home(viewModel: FeedViewModel, navController: NavHostController) {
     val dataStore = LocalActivity.current.dataStore

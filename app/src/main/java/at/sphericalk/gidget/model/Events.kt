@@ -50,6 +50,12 @@ data class Payload(
     val distinct_size: Long? = null,
     val head: String? = null,
     val before: String? = null,
+    @Embedded val member: Member?
+)
+
+@Keep
+data class Member(
+    @ColumnInfo(name = "payload_member_name") val login: String
 )
 
 @Keep
@@ -62,7 +68,8 @@ enum class Action {
     Assigned,
     Unassigned,
     Labeled,
-    Unlabeled;
+    Unlabeled,
+    Added;
 
     override fun toString() = when (this) {
         Published -> "published"
@@ -74,6 +81,7 @@ enum class Action {
         Unassigned -> "unassigned"
         Labeled -> "labeled"
         Unlabeled -> "unlabeled"
+        Added -> "added"
     }
 }
 
@@ -151,7 +159,7 @@ enum class EventType {
         GollumEvent -> "created a wiki page for"
         IssueCommentEvent -> "commented on an issue in"
         IssuesEvent -> ""
-        MemberEvent -> "became a member of"
+        MemberEvent -> "added"
         PullRequestEvent -> "created a pull request in"
         PullRequestReviewEvent -> "reviewed a pull request in"
         PullRequestReviewCommentEvent -> "commented on a pull request review in"

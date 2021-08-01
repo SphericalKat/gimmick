@@ -137,6 +137,13 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                                         EventType.IssuesEvent -> {
                                             append("${event.payload?.action.toString()} an issue in")
                                         }
+                                        EventType.MemberEvent -> {
+                                            append(" ")
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(event.payload?.member?.login.toString())
+                                            }
+                                            append(" to")
+                                        }
                                     }
                                     append(" ")
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {

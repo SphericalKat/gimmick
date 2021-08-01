@@ -62,6 +62,7 @@ class Converters {
         Action.Unassigned -> 7
         Action.Labeled -> 8
         Action.Unlabeled -> 9
+        Action.Added -> 10
         else -> null
     }
 
@@ -76,6 +77,7 @@ class Converters {
         7 -> Action.Unassigned
         8 -> Action.Labeled
         9 -> Action.Unlabeled
+        10 -> Action.Added
         null -> null
         else -> throw IllegalStateException("unknown action type")
     }

@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import at.sphericalk.gidget.model.Event
 
-@Database(entities = [Event::class], version = 1, exportSchema = true)
+@Database(entities = [Event::class], version = 2, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class AppDb : RoomDatabase() {
     abstract fun eventDao(): EventDao

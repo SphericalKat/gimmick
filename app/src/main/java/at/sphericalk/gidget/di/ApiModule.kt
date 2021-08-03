@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 
@@ -23,7 +23,7 @@ object ApiModule {
     fun providesRetrofitService(client: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
 //        .client(client)
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create())
         .build()
 
 

@@ -1,9 +1,22 @@
 package at.sphericalk.gidget.model
 
 import androidx.annotation.Keep
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import at.sphericalk.gidget.data.db.Converters
 import at.sphericalk.gidget.utils.Constants
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+
+var mapType = Types.newParameterizedType(
+    MutableMap::class.java,
+    String::class.java,
+    String::class.java
+)
+
+val mapAdapter = Converters.moshi.adapter<Map<String, String>>(mapType)
 
 @Keep
 @Entity
@@ -24,8 +37,8 @@ data class RepoExtra(
     val language: String? = null
 )
 
-val languages: Map<String, String?> =
-    Gson().fromJson(Constants.LANGUAGES, Map::class.java) as Map<String, String?>
+val languages: Map<String, String> =
+    mapAdapter.fromJson(Constants.LANGUAGES)!!
 
 @Keep
 data class Actor(

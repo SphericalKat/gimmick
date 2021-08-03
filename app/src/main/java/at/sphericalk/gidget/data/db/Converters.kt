@@ -1,15 +1,22 @@
 package at.sphericalk.gidget.data.db
 
-import androidx.room.TypeConverter
 //import at.sphericalk.gidget.model.Action
+import androidx.room.TypeConverter
 import at.sphericalk.gidget.model.Asset
 import at.sphericalk.gidget.model.EventType
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import java.lang.reflect.Type
 
 
-class Converters {
+object Converters {
+    val moshi: Moshi = Moshi.Builder().build()
+    private val listAsset: Type = Types.newParameterizedType(
+        MutableList::class.java,
+        Asset::class.java
+    )
+    val adapter = moshi.adapter<List<Asset>>(listAsset)
+
     @TypeConverter
     fun fromEventType(value: EventType) = when (value) {
         EventType.CommitCommentEvent -> 1
@@ -83,10 +90,8 @@ class Converters {
 //    }
 
     @TypeConverter
-    fun fromAssetList(value: List<Asset>): String = Gson().toJson(value)
-
-    var listOfAssetType: Type = object : TypeToken<List<Asset>>() {}.type
+    fun fromAssetList(value: List<Asset>): String = adapter.toJson(value)
 
     @TypeConverter
-    fun toAssetList(value: String): List<Asset> = Gson().fromJson(value, listOfAssetType)
+    fun toAssetList(value: String): List<Asset>? = adapter.fromJson(value)
 }

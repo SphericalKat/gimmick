@@ -11,5 +11,7 @@ CLIENT_ID="<client id>" // these quotes are important!
 CLIENT_SECRET="<client secret>" // these quotes are important!
 ```
 
+> The Oauth callback URL should be set to `gimmick://auth`
+
 # Contribution
 As always, I'm open to pull requests and issues. I will do my best to address these, but might not always be available thanks to work and other priorities.

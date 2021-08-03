@@ -3,6 +3,7 @@ package at.sphericalk.gidget.di
 import android.content.Context
 import androidx.room.Room
 import at.sphericalk.gidget.data.db.AppDb
+import at.sphericalk.gidget.data.db.Converters
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,9 @@ import javax.inject.Singleton
 object DbModule {
     @Provides
     @Singleton
-    fun providesAppDb(@ApplicationContext context: Context) =
+    fun providesAppDb(@ApplicationContext context: Context, converters: Converters) =
         Room.databaseBuilder(context, AppDb::class.java, "gimmick-db")
+            .addTypeConverter(converters)
             .fallbackToDestructiveMigration()
             .build()
 

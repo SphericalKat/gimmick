@@ -51,7 +51,8 @@ data class Payload(
     val before: String? = null,
     @Embedded val member: Member?,
     @Embedded val forkee: Forkee?,
-    @Embedded val issue: Issue?
+    @Embedded val issue: Issue?,
+    @Embedded val comment: Comment?
 )
 
 @Keep
@@ -71,6 +72,12 @@ data class Issue(
     @ColumnInfo(name = "issue_html_url") val html_url: String,
     @ColumnInfo(name = "issue_number") val number: Long,
     @ColumnInfo(name = "issue_title") val title: String,
+)
+
+@Keep
+data class Comment(
+    @ColumnInfo(name = "comment_html_url") val html_url: String?,
+    @ColumnInfo(name = "comment_body") val body: String?
 )
 
 @Keep

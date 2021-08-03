@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.OpenInNew
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -161,28 +163,41 @@ fun Feed(navController: NavController, viewModel: FeedViewModel, languageColors:
                             )
                         }
                         Card(onClick = { handleCLick(navController, viewModel, event, context) }) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(24.dp)
-                                    .fillMaxWidth()
-                            ) {
-                                Text(buildAnnotatedString {
-                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        if (event.type == EventType.ForkEvent) {
-                                            append(event.payload?.forkee?.full_name.toString())
-                                        } else {
-                                            append(event.repo.name)
-                                        }
+                            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(24.dp).fillParentMaxWidth(0.75f)
+                                ) {
+                                    val showTitle = event.type != EventType.IssueCommentEvent
+                                    if (showTitle) {
+                                        Text(buildAnnotatedString {
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                when (event.type) {
+                                                    EventType.ForkEvent -> {
+                                                        append(event.payload?.forkee?.full_name.toString())
+                                                    }
+                                                    else -> {
+                                                        append(event.repo.name)
+                                                    }
+                                                }
+                                            }
+                                        })
                                     }
-                                })
-                                val desc =
-                                    if (event.type == EventType.ForkEvent) event.payload?.forkee?.description else event.repoExtra?.description
-                                desc?.let {
-                                    Text(
-                                        text = it,
-                                        fontSize = 14.sp,
-                                        modifier = Modifier.padding(top = 8.dp)
-                                    )
+                                    val desc = when (event.type) {
+                                        EventType.ForkEvent -> event.payload?.forkee?.description
+                                        EventType.IssueCommentEvent -> event.payload?.comment?.body
+                                        else -> event.repoExtra?.description
+                                    }
+                                    desc?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 14.sp,
+                                            modifier = Modifier.padding(top = (if (showTitle) 8 else 0).dp)
+                                        )
+                                    }
+                                }
+                                Column(Modifier.fillMaxHeight().fillParentMaxWidth().padding(end = 24.dp), verticalArrangement = Arrangement.Center) {
+                                    Icon(Icons.Rounded.OpenInNew, "")
                                 }
                             }
                         }
@@ -230,7 +245,7 @@ fun handleCLick(
         else -> {
             val url = when (event.type) {
                 EventType.ForkEvent -> event.payload?.forkee?.html_url
-                EventType.IssueCommentEvent -> event.payload?.issue?.html_url
+                EventType.IssueCommentEvent -> event.payload?.comment?.html_url
                 else -> event.repoExtra?.html_url
             }
             if (url != null) {

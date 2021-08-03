@@ -29,9 +29,9 @@ import at.sphericalk.gidget.R
 import at.sphericalk.gidget.dataStore
 import at.sphericalk.gidget.model.Event
 import at.sphericalk.gidget.model.EventType
-import at.sphericalk.gidget.model.languages
 import at.sphericalk.gidget.ui.composables.Loading
 import at.sphericalk.gidget.utils.Constants
+import at.sphericalk.gidget.utils.LanguageColors
 import at.sphericalk.gidget.utils.timeAgo
 import at.sphericalk.gidget.utils.toColor
 import coil.transform.CircleCropTransformation
@@ -47,7 +47,7 @@ import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Feed(navController: NavController, viewModel: FeedViewModel) {
+fun Feed(navController: NavController, viewModel: FeedViewModel, languageColors: LanguageColors) {
     val datastore = LocalActivity.current.dataStore
     val username = runBlocking { datastore.data.map { it[Constants.USERNAME] }.first() }
 
@@ -189,7 +189,7 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
 
 
                             event.repoExtra?.language?.let {
-                                val color = languages[it]?.toColor() ?: Color.Transparent
+                                val color = languageColors[it]?.toColor() ?: Color.Transparent
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Canvas(modifier = Modifier.size(12.dp), onDraw = {
                                         drawCircle(color)

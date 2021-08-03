@@ -15,7 +15,7 @@ fun String.timeAgo(): String {
     return try {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
         sdf.timeZone = TimeZone.getTimeZone("UTC")
-        val date = sdf.parse(this)
+        val date = sdf.parse(this)!!
         DateUtils.getRelativeTimeSpanString(
             date.time,
             Date().time,

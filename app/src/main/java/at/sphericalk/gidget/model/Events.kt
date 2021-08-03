@@ -10,13 +10,8 @@ import at.sphericalk.gidget.utils.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
-var mapType = Types.newParameterizedType(
-    MutableMap::class.java,
-    String::class.java,
-    String::class.java
-)
 
-val mapAdapter = Converters.moshi.adapter<Map<String, String>>(mapType)
+
 
 @Keep
 @Entity
@@ -36,9 +31,6 @@ data class RepoExtra(
     @ColumnInfo(name = "repo_extra_description") val description: String? = null,
     val language: String? = null
 )
-
-val languages: Map<String, String> =
-    mapAdapter.fromJson(Constants.LANGUAGES)!!
 
 @Keep
 data class Actor(

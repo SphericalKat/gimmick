@@ -25,11 +25,13 @@ import at.sphericalk.gidget.ui.routes.Release
 import at.sphericalk.gidget.ui.routes.Welcome
 import at.sphericalk.gidget.ui.theme.GidgetTheme
 import at.sphericalk.gidget.utils.Constants
+import at.sphericalk.gidget.utils.LanguageColors
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 val Context.dataStore by preferencesDataStore(name = "settings")
 val LocalActivity = compositionLocalOf<Activity> { error("No context found!") }
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var navController: NavHostController
+    @Inject lateinit var languageColors: LanguageColors
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +65,7 @@ class MainActivity : ComponentActivity() {
 
                     CompositionLocalProvider(LocalActivity provides this) {
                         navController = rememberNavController()
-                        Home(viewModel, navController)
+                        Home(viewModel, navController, languageColors)
                     }
                 }
             }
@@ -99,7 +102,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Home(viewModel: FeedViewModel, navController: NavHostController) {
+fun Home(viewModel: FeedViewModel, navController: NavHostController, languageColors: LanguageColors) {
     val dataStore = LocalActivity.current.dataStore
 
     val token = runBlocking { dataStore.data.first()[Constants.API_KEY] }
@@ -107,7 +110,7 @@ fun Home(viewModel: FeedViewModel, navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable("welcome") { Welcome(navController) }
-        composable("feed") { Feed(navController, viewModel) }
+        composable("feed") { Feed(navController, viewModel, languageColors) }
         composable("release") { Release(navController, viewModel) }
     }
 }

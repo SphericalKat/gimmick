@@ -50,12 +50,20 @@ data class Payload(
     val distinct_size: Long? = null,
     val head: String? = null,
     val before: String? = null,
-    @Embedded val member: Member?
+    @Embedded val member: Member?,
+    @Embedded val forkee: Forkee?
 )
 
 @Keep
 data class Member(
     @ColumnInfo(name = "payload_member_name") val login: String
+)
+
+@Keep
+data class Forkee(
+    @ColumnInfo(name = "forkee_full_name") val full_name: String,
+    @ColumnInfo(name = "forkee_html_url") val html_url: String,
+    @ColumnInfo(name = "forkee_description") val description: String?
 )
 
 //@Keep

@@ -161,10 +161,16 @@ fun Feed(navController: NavController, viewModel: FeedViewModel) {
                             ) {
                                 Text(buildAnnotatedString {
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                        append(event.repo.name)
+                                        if (event.type == EventType.ForkEvent) {
+                                            append(event.payload?.forkee?.full_name.toString())
+                                        } else {
+                                            append(event.repo.name)
+                                        }
                                     }
                                 })
-                                event.repoExtra?.description?.let {
+                                val desc =
+                                    if (event.type == EventType.ForkEvent) event.payload?.forkee?.description else event.repoExtra?.description
+                                desc?.let {
                                     Text(
                                         text = it,
                                         fontSize = 14.sp,
@@ -215,7 +221,8 @@ fun handleCLick(
             navController.navigate("release")
         }
         else -> {
-            val url = event.repoExtra?.html_url
+            val url =
+                if (event.type == EventType.ForkEvent) event.payload?.forkee?.html_url else event.repoExtra?.html_url
             if (url != null) {
                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }

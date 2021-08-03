@@ -144,6 +144,13 @@ fun Feed(navController: NavController, viewModel: FeedViewModel, languageColors:
                                             }
                                             append(" to")
                                         }
+                                        EventType.IssueCommentEvent -> {
+                                            append("${event.payload?.action.toString()} a comment on issue ")
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append("#${event.payload?.issue?.number.toString()} ")
+                                            }
+                                            append("in ")
+                                        }
                                     }
                                     append(" ")
                                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -221,8 +228,11 @@ fun handleCLick(
             navController.navigate("release")
         }
         else -> {
-            val url =
-                if (event.type == EventType.ForkEvent) event.payload?.forkee?.html_url else event.repoExtra?.html_url
+            val url = when (event.type) {
+                EventType.ForkEvent -> event.payload?.forkee?.html_url
+                EventType.IssueCommentEvent -> event.payload?.issue?.html_url
+                else -> event.repoExtra?.html_url
+            }
             if (url != null) {
                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }

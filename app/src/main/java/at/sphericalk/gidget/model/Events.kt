@@ -50,7 +50,8 @@ data class Payload(
     val head: String? = null,
     val before: String? = null,
     @Embedded val member: Member?,
-    @Embedded val forkee: Forkee?
+    @Embedded val forkee: Forkee?,
+    @Embedded val issue: Issue?
 )
 
 @Keep
@@ -65,33 +66,12 @@ data class Forkee(
     @ColumnInfo(name = "forkee_description") val description: String?
 )
 
-//@Keep
-//enum class Action {
-//    Published,
-//    Started,
-//    Opened,
-//    Closed,
-//    Reopened,
-//    Assigned,
-//    Unassigned,
-//    Labeled,
-//    Unlabeled,
-//    Added;
-//
-//    override fun toString() = when (this) {
-//        Published -> "published"
-//        Started -> "started"
-//        Opened -> "opened"
-//        Closed -> "closed"
-//        Reopened -> "reopened"
-//        Assigned -> "assigned"
-//        Unassigned -> "unassigned"
-//        Labeled -> "labeled"
-//        Unlabeled -> "unlabeled"
-//        Added -> "added"
-//    }
-//}
-
+@Keep
+data class Issue(
+    @ColumnInfo(name = "issue_html_url") val html_url: String,
+    @ColumnInfo(name = "issue_number") val number: Long,
+    @ColumnInfo(name = "issue_title") val title: String,
+)
 
 @Keep
 data class Release(
@@ -164,7 +144,7 @@ enum class EventType {
         CommitCommentEvent -> "commented on a commit in"
         DeleteEvent -> "deleted"
         GollumEvent -> "created a wiki page for"
-        IssueCommentEvent -> "commented on an issue in"
+        IssueCommentEvent -> ""
         IssuesEvent -> ""
         MemberEvent -> "added"
         PullRequestEvent -> "created a pull request in"

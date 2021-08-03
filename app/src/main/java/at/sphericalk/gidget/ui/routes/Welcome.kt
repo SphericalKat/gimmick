@@ -54,7 +54,10 @@ fun Welcome(navController: NavController) {
             ) {
                 val activity = LocalActivity.current
                 var isLoading by remember { mutableStateOf(false) }
-                Image(painter = painterResource(id = R.drawable.ic_gimmick_icon), contentDescription = "Github Icon")
+                Image(
+                    painter = painterResource(id = R.drawable.ic_gimmick_icon),
+                    contentDescription = "Github Icon"
+                )
                 Text(
                     text = "Welcome to your new and improved GitHub feed.",
                     style = MaterialTheme.typography.h6

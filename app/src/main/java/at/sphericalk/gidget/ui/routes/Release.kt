@@ -70,7 +70,7 @@ fun Release(navController: NavController, viewModel: FeedViewModel) {
                 Text(text = event.repo.name, style = MaterialTheme.typography.h6)
 
                 Text(
-                    text = event.payload?.release?.name!!,
+                    text = event.payload.release?.name!!,
                     style = MaterialTheme.typography.h4
                 )
 
@@ -130,7 +130,7 @@ fun Release(navController: NavController, viewModel: FeedViewModel) {
 //                }
 
                 MarkdownText(
-                    markdown = "${event.payload?.release?.body!!}\n\n",
+                    markdown = "${event.payload.release.body}\n\n",
                     fontResource = R.font.manrope_regular,
                 )
                 if (openDialog.value) {
@@ -159,7 +159,7 @@ fun Release(navController: NavController, viewModel: FeedViewModel) {
                         },
                         text = {
                             MarkdownText(
-                                markdown = event.payload?.release?.body!!,
+                                markdown = event.payload.release.body,
                                 fontResource = R.font.manrope_regular
                             )
                         },

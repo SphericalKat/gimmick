@@ -41,7 +41,8 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: FeedViewModel by viewModels()
     private lateinit var navController: NavHostController
-    @Inject lateinit var languageColors: LanguageColors
+    @Inject
+    lateinit var languageColors: LanguageColors
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +103,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Home(viewModel: FeedViewModel, navController: NavHostController, languageColors: LanguageColors) {
+fun Home(
+    viewModel: FeedViewModel,
+    navController: NavHostController,
+    languageColors: LanguageColors
+) {
     val dataStore = LocalActivity.current.dataStore
 
     val token = runBlocking { dataStore.data.first()[Constants.API_KEY] }

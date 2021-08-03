@@ -5,12 +5,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import at.sphericalk.gidget.data.db.Converters
-import at.sphericalk.gidget.utils.Constants
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-
-
 
 
 @Keep
@@ -104,7 +98,7 @@ data class Release(
     @ColumnInfo(name = "release_url") val url: String,
     val assets_url: String,
     val upload_url: String,
-    @ColumnInfo(name = "release_html_url")  val html_url: String,
+    @ColumnInfo(name = "release_html_url") val html_url: String,
     val tag_name: String,
     val target_commitish: String,
     val name: String,

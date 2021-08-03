@@ -4,7 +4,6 @@ import android.util.Log
 import at.sphericalk.gidget.data.db.EventDao
 import at.sphericalk.gidget.data.network.GithubDataSource
 import at.sphericalk.gidget.model.Event
-import at.sphericalk.gidget.model.EventType
 import at.sphericalk.gidget.model.RepoExtra
 import at.sphericalk.gidget.utils.destructure
 import kotlinx.coroutines.FlowPreview

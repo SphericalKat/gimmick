@@ -38,7 +38,7 @@ data class Actor(
 
 @Keep
 data class Payload(
-    val action: Action? = null,
+    val action: String? = null,
     @Embedded val release: Release? = null,
     val ref: String? = null,
     val ref_type: String? = null,
@@ -58,32 +58,32 @@ data class Member(
     @ColumnInfo(name = "payload_member_name") val login: String
 )
 
-@Keep
-enum class Action {
-    Published,
-    Started,
-    Opened,
-    Closed,
-    Reopened,
-    Assigned,
-    Unassigned,
-    Labeled,
-    Unlabeled,
-    Added;
-
-    override fun toString() = when (this) {
-        Published -> "published"
-        Started -> "started"
-        Opened -> "opened"
-        Closed -> "closed"
-        Reopened -> "reopened"
-        Assigned -> "assigned"
-        Unassigned -> "unassigned"
-        Labeled -> "labeled"
-        Unlabeled -> "unlabeled"
-        Added -> "added"
-    }
-}
+//@Keep
+//enum class Action {
+//    Published,
+//    Started,
+//    Opened,
+//    Closed,
+//    Reopened,
+//    Assigned,
+//    Unassigned,
+//    Labeled,
+//    Unlabeled,
+//    Added;
+//
+//    override fun toString() = when (this) {
+//        Published -> "published"
+//        Started -> "started"
+//        Opened -> "opened"
+//        Closed -> "closed"
+//        Reopened -> "reopened"
+//        Assigned -> "assigned"
+//        Unassigned -> "unassigned"
+//        Labeled -> "labeled"
+//        Unlabeled -> "unlabeled"
+//        Added -> "added"
+//    }
+//}
 
 
 @Keep

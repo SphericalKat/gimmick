@@ -1,7 +1,7 @@
 package at.sphericalk.gidget.data.db
 
 import androidx.room.TypeConverter
-import at.sphericalk.gidget.model.Action
+//import at.sphericalk.gidget.model.Action
 import at.sphericalk.gidget.model.Asset
 import at.sphericalk.gidget.model.EventType
 import com.google.gson.Gson
@@ -51,36 +51,36 @@ class Converters {
         else -> throw IllegalStateException("unknown event type")
     }
 
-    @TypeConverter
-    fun fromActionType(value: Action?) = when (value) {
-        Action.Published -> 1
-        Action.Started -> 2
-        Action.Opened -> 3
-        Action.Closed -> 4
-        Action.Reopened -> 5
-        Action.Assigned -> 6
-        Action.Unassigned -> 7
-        Action.Labeled -> 8
-        Action.Unlabeled -> 9
-        Action.Added -> 10
-        else -> null
-    }
-
-    @TypeConverter
-    fun toActionType(value: Int?) = when (value) {
-        1 -> Action.Published
-        2 -> Action.Started
-        3 -> Action.Opened
-        4 -> Action.Closed
-        5 -> Action.Reopened
-        6 -> Action.Assigned
-        7 -> Action.Unassigned
-        8 -> Action.Labeled
-        9 -> Action.Unlabeled
-        10 -> Action.Added
-        null -> null
-        else -> throw IllegalStateException("unknown action type")
-    }
+//    @TypeConverter
+//    fun fromActionType(value: Action?) = when (value) {
+//        Action.Published -> 1
+//        Action.Started -> 2
+//        Action.Opened -> 3
+//        Action.Closed -> 4
+//        Action.Reopened -> 5
+//        Action.Assigned -> 6
+//        Action.Unassigned -> 7
+//        Action.Labeled -> 8
+//        Action.Unlabeled -> 9
+//        Action.Added -> 10
+//        else -> null
+//    }
+//
+//    @TypeConverter
+//    fun toActionType(value: Int?) = when (value) {
+//        1 -> Action.Published
+//        2 -> Action.Started
+//        3 -> Action.Opened
+//        4 -> Action.Closed
+//        5 -> Action.Reopened
+//        6 -> Action.Assigned
+//        7 -> Action.Unassigned
+//        8 -> Action.Labeled
+//        9 -> Action.Unlabeled
+//        10 -> Action.Added
+//        null -> null
+//        else -> throw IllegalStateException("unknown action type")
+//    }
 
     @TypeConverter
     fun fromAssetList(value: List<Asset>): String = Gson().toJson(value)

@@ -1,6 +1,7 @@
 package at.sphericalk.gidget.di
 
 import at.sphericalk.gidget.data.network.GithubService
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,4 +42,8 @@ object ApiModule {
             .addInterceptor(logging)
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun providesMoshiInstance() = Moshi.Builder().build()
 }

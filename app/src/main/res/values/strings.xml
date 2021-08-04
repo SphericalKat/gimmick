@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Gimmick</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_msg">Welcome to your new and improved GitHub feed.</string>
+    <string name="sign_in">Sign in</string>
+    <string name="gh_icon_desc">GitHub icon</string>
 </resources>

@@ -21,7 +21,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".AuthActivity"
+            android:theme="@style/Theme.Transparent"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -33,6 +37,7 @@
                     android:scheme="gimmick" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

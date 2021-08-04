@@ -4,10 +4,14 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import at.sphericalk.gidget.dataStore
+import at.sphericalk.gidget.model.ApiResult
 import at.sphericalk.gidget.model.Event
 import at.sphericalk.gidget.repo.GithubRepository
 import at.sphericalk.gidget.utils.Constants
@@ -78,26 +82,31 @@ class FeedViewModel @Inject constructor(
         clientId: String,
         clientSecret: String,
         code: String,
-        redirectUrl: String
-    ) = liveData {
-        try {
-            repository.getAccessToken(
-                clientId,
-                clientSecret,
-                code,
-                redirectUrl
-            ).catch { e ->
-                Log.e("VIEWMODEL", "Something went wrong fetching the auth token", e)
-            }.collect {
-                if (it.error != null || it.access_token == null) {
-                    Log.e("VIEWMODEL", "Could not fetch access token")
-                } else {
-                    val user = repository.getUser(it.access_token)
-                    emit(Pair(it.access_token, user.login))
-                }
-            }
-        } catch (e: Exception) {
+        redirectUrl: String,
+        dataStore: DataStore<Preferences>
+    ) = liveData<ApiResult<Unit>> {
+        emit(ApiResult.Loading)
+
+        repository.getAccessToken(
+            clientId,
+            clientSecret,
+            code,
+            redirectUrl
+        ).catch { e ->
             Log.e("VIEWMODEL", "Something went wrong fetching the auth token", e)
+            emit(ApiResult.Error("Something went wrong fetching the auth token"))
+        }.collect {
+            if (it.error != null || it.access_token == null) {
+                Log.e("VIEWMODEL", "Could not fetch access token")
+                emit(ApiResult.Error("Something went wrong fetching the auth token"))
+            } else {
+                val user = repository.getUser(it.access_token)
+                dataStore.edit { prefs ->
+                    prefs[Constants.API_KEY] = it.access_token
+                    prefs[Constants.USERNAME] = user.login
+                }
+                emit(ApiResult.Success(Unit))
+            }
         }
     }
 }

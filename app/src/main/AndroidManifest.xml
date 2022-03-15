@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".AuthActivity"
+            android:exported="true"
             android:theme="@style/Theme.Transparent"
             android:launchMode="singleTop">
             <intent-filter>

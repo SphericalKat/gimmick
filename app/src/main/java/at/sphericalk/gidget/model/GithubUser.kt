@@ -27,7 +27,6 @@ data class GithubUser(
     val blog: String,
     val location: String,
     val email: String,
-    val hireable: Boolean,
     val bio: String,
     val twitter_username: String,
     val public_repos: Int,
